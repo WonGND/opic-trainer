@@ -1,6 +1,6 @@
 /* OPIc 창고 서비스워커: 한 번 방문하면 오프라인에서도 열리도록 캐시합니다.
    ※ 로컬 파일(file://)에서는 동작하지 않고, GitHub Pages 등 http(s)로 올렸을 때만 작동합니다. */
-const CACHE = "opic-cache-v1";
+const CACHE = "opic-cache-v2";
 
 self.addEventListener("install", (e) => self.skipWaiting());
 self.addEventListener("activate", (e) => e.waitUntil(self.clients.claim()));
