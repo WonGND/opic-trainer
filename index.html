@@ -396,6 +396,104 @@
     .topbar-head{padding:20px 32px 10px;}
     .topics{padding:4px 32px 16px;}
   }
+
+  /* ============================================================
+     [Phase 3] 발음 듣기(TTS) · 실전 말하기(녹음) · 롤플레이 · D-day 플랜
+     ============================================================ */
+  /* 🔊 발음 듣기 버튼 — 영어가 나오는 곳 어디에나 붙는 작은 원형 버튼 */
+  .spk{display:inline-grid;place-items:center;width:30px;height:30px;min-width:30px;border-radius:50%;
+    border:1px solid var(--line);background:var(--surface);color:var(--teal);vertical-align:middle;margin-left:6px;padding:0;}
+  .spk svg{width:16px;height:16px;}
+  .spk:active{transform:scale(.92);}
+  .spk.on{background:var(--teal);border-color:var(--teal);color:#fff;animation:spkPulse 1s ease-in-out infinite;}
+  .spk.lg{width:38px;height:38px;min-width:38px;}
+  .spk.lg svg{width:20px;height:20px;}
+  @keyframes spkPulse{0%,100%{box-shadow:0 0 0 0 rgba(43,179,163,.45)}50%{box-shadow:0 0 0 7px rgba(43,179,163,0)}}
+  .spk[disabled]{opacity:.35;}
+  .spk-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:10px;}
+  .spk-row .rate{font-size:11.5px;color:var(--ink-faint);}
+
+  /* 🎙 실전 말하기(녹음 + 타이머) */
+  .rec{margin-top:14px;border:1px solid var(--line);border-radius:14px;padding:13px 14px;background:var(--bg);}
+  .rec-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px;}
+  .rec-title{font-size:12.5px;font-weight:800;color:var(--ink-soft);letter-spacing:.2px;}
+  .rec-target{font-size:11.5px;color:var(--ink-faint);}
+  .rec-main{display:flex;align-items:center;gap:12px;}
+  .rec-btn{width:56px;height:56px;min-width:56px;border-radius:50%;display:grid;place-items:center;
+    background:var(--red);color:#fff;border:none;font-size:22px;}
+  .rec-btn.stop{background:var(--ink);}
+  .rec-btn[disabled]{opacity:.4;}
+  .rec-meta{flex:1;min-width:0;}
+  .rec-time{font-family:var(--font-en);font-size:26px;font-weight:700;line-height:1.1;font-variant-numeric:tabular-nums;}
+  .rec-time.over{color:var(--green);}
+  .rec-bar{height:6px;border-radius:4px;background:var(--line);overflow:hidden;margin-top:7px;}
+  .rec-bar span{display:block;height:100%;background:var(--red);border-radius:4px;transition:width .3s linear;}
+  .rec-bar span.ok{background:var(--green);}
+  .rec-hint{font-size:11.5px;color:var(--ink-faint);margin-top:6px;line-height:1.6;}
+  .rec-live{margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--amber-soft);color:#7a5410;
+    font-size:13px;font-family:var(--font-en);line-height:1.6;min-height:20px;}
+  :root[data-theme="dark"] .rec-live{color:var(--amber);}
+  .rec-audio{width:100%;margin-top:10px;}
+  .rec-warn{font-size:12px;color:var(--ink-soft);background:var(--amber-soft);border-radius:10px;padding:9px 12px;line-height:1.6;}
+  :root[data-theme="dark"] .rec-warn{color:var(--amber);}
+  .rec-dot{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--red);margin-right:6px;
+    animation:recBlink 1s steps(2,start) infinite;}
+  @keyframes recBlink{50%{opacity:0}}
+
+  /* 🎭 롤플레이 */
+  .rp-kinds{display:flex;gap:8px;margin-bottom:16px;}
+  .rp-kinds button{flex:1;padding:10px 4px;border-radius:12px;border:1px solid var(--line);background:var(--surface);
+    font-size:12.5px;font-weight:700;color:var(--ink-soft);line-height:1.3;}
+  .rp-kinds button.on{background:var(--teal);border-color:var(--teal);color:#fff;}
+  .rp-kinds .k-emoji{font-size:15px;display:block;margin-bottom:2px;}
+  .rp-keys{margin-top:12px;padding:11px 13px;border-radius:12px;background:var(--amber-soft);}
+  .rp-keys .lab{font-size:11.5px;font-weight:800;color:#8a5f13;letter-spacing:.3px;}
+  :root[data-theme="dark"] .rp-keys .lab{color:var(--amber);}
+  .rp-keys ul{margin:6px 0 0;padding-left:18px;}
+  .rp-keys li{font-family:var(--font-en);font-size:14px;line-height:1.8;}
+  .rp-model{margin-top:12px;padding:13px 15px;border-radius:12px;background:var(--green-soft);}
+  .rp-model .lab{font-size:11.5px;font-weight:800;color:#1f7a52;letter-spacing:.3px;}
+  :root[data-theme="dark"] .rp-model .lab{color:var(--green);}
+  .rp-model .en{font-size:15px;line-height:1.75;margin-top:5px;}
+  .rp-model .ko{font-size:13px;color:var(--ink-soft);line-height:1.75;margin-top:9px;
+    padding-top:9px;border-top:1px dashed rgba(46,158,107,.35);}
+
+  /* 📅 D-day · 21일 플랜 */
+  .dday-card{text-align:center;padding:20px 18px 18px;}
+  .dday-num{font-family:var(--font-en);font-size:44px;font-weight:800;line-height:1;color:var(--teal);letter-spacing:-1px;}
+  .dday-num.urgent{color:var(--red);}
+  .dday-date{font-size:12.5px;color:var(--ink-faint);margin-top:6px;}
+  .dday-phase{display:inline-block;margin-top:11px;padding:5px 13px;border-radius:999px;
+    background:var(--teal-soft);color:var(--teal);font-size:12px;font-weight:800;}
+  .dday-set{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:12px;}
+  .dday-set input{padding:10px 12px;border:1px solid var(--line);border-radius:11px;background:var(--surface);
+    color:var(--ink);font-family:inherit;font-size:14px;}
+  .plan-card{padding:16px 16px 14px;}
+  .plan-head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;margin-bottom:3px;}
+  .plan-day{font-size:15px;font-weight:800;}
+  .plan-count{font-size:12px;color:var(--ink-faint);font-variant-numeric:tabular-nums;}
+  .plan-title{font-size:13px;color:var(--ink-soft);margin-bottom:12px;line-height:1.6;}
+  .plan-task{display:flex;align-items:center;gap:11px;padding:10px 0;border-top:1px solid var(--line);}
+  .plan-task:first-of-type{border-top:none;}
+  .plan-check{width:26px;height:26px;min-width:26px;border-radius:8px;border:1.8px solid var(--line);
+    background:var(--surface);display:grid;place-items:center;color:transparent;}
+  .plan-check.on{background:var(--green);border-color:var(--green);color:#fff;}
+  .plan-check svg{width:15px;height:15px;}
+  .plan-label{flex:1;min-width:0;font-size:13.5px;line-height:1.5;}
+  .plan-task.done .plan-label{color:var(--ink-faint);text-decoration:line-through;}
+  .plan-go{flex:0 0 auto;padding:6px 12px;border-radius:9px;font-size:12.5px;font-weight:700;
+    background:var(--teal-soft);color:var(--teal);border:none;}
+  .plan-bar{height:7px;border-radius:5px;background:var(--line);overflow:hidden;margin:12px 0 2px;}
+  .plan-bar span{display:block;height:100%;background:var(--teal);border-radius:5px;transition:width .3s;}
+  .plan-bar span.done{background:var(--green);}
+  .plan-list{margin-top:4px;}
+  .plan-row{display:flex;align-items:center;gap:10px;padding:9px 2px;border-top:1px solid var(--line);font-size:13px;}
+  .plan-row .pd{font-family:var(--font-en);font-weight:700;color:var(--ink-faint);min-width:46px;font-size:12px;}
+  .plan-row.today{background:var(--teal-soft);border-radius:9px;padding-left:9px;padding-right:9px;}
+  .plan-row.today .pd{color:var(--teal);}
+  .plan-row .pt{flex:1;min-width:0;}
+  .plan-row .pp{font-size:11px;color:var(--ink-faint);font-variant-numeric:tabular-nums;}
+  .plan-row.past .pt{color:var(--ink-faint);}
 </style>
 <script>
   // 화면이 그려지기 전에 저장된 테마를 미리 적용(다크→라이트 깜빡임 방지)
@@ -2912,6 +3010,271 @@ const DATA={
       answer_en:"It takes two hours to get there from here.",hint:"get there (거기에 도착하다)"},
 
   ],
+
+  /* 롤플레이 — OPIc 11~13번 유형(질문하기 · 문제 해결 · 유사 경험).
+     kind: ask(정보 요청·질문하기) / solve(문제 상황 해결) / exp(유사 경험 서술)
+     keys: 반드시 써먹을 핵심 표현 · model_en/ko: AL 수준 모범답안 */
+  roleplay:[
+    /* ---- 자기소개 ---- */
+    {id:"rp1",topic:"selfintro",kind:"ask",
+      en:"I'd like to get to know you better. Ask me three or four questions about my life and my daily routine.",
+      ko:"저에 대해 더 알고 싶어요. 제 생활과 하루 일과에 대해 서너 가지 질문해 보세요.",
+      keys:["Do you mind if I ask ~?","What do you usually do on ~?","How long have you been ~ing?"],
+      model_en:"Sure, I'd love to know more about you. First, do you mind if I ask what you do for a living? And how long have you been doing that? Second, what does a typical weekday look like for you — do you have a set routine in the morning? Third, what do you usually do on weekends to unwind? Lastly, is there anything new you've picked up recently, like a hobby or a class?",
+      model_ko:"네, 당신에 대해 더 알고 싶어요. 먼저, 무슨 일을 하시는지 여쭤봐도 될까요? 그리고 그 일을 하신 지는 얼마나 되셨어요? 둘째로, 평범한 평일은 어떤 모습인가요 — 아침에 정해진 루틴이 있으신가요? 셋째, 주말에는 보통 뭘 하면서 쉬시나요? 마지막으로, 최근에 새로 시작하신 취미나 수업 같은 게 있나요?"},
+    {id:"rp2",topic:"selfintro",kind:"solve",
+      en:"You made plans to meet a new friend this weekend, but something came up and you can't make it. Call your friend, explain the situation, and suggest two alternatives.",
+      ko:"이번 주말에 새 친구를 만나기로 했는데 일이 생겨 갈 수 없게 됐어요. 친구에게 전화해 상황을 설명하고 두 가지 대안을 제시하세요.",
+      keys:["Something came up.","I feel terrible about this, but ~","Would it work for you if ~?"],
+      model_en:"Hey, it's me. I'm really sorry to call you last minute, but something came up at work and I don't think I can make it this Saturday. My manager asked me to cover a shift, and I couldn't say no. I feel terrible about this because I was really looking forward to it. So here's what I was thinking — would it work for you if we pushed it to Sunday afternoon instead? Or, if you're busy then, we could do dinner next Wednesday and I'll treat you to make up for it. Either way, just let me know what works better for you.",
+      model_ko:"안녕, 나야. 이렇게 갑자기 전화해서 정말 미안한데, 회사에 일이 생겨서 이번 토요일에 못 갈 것 같아. 팀장님이 대신 근무를 서달라고 하셔서 거절할 수가 없었어. 정말 기대하고 있었는데 너무 미안해. 그래서 생각해 봤는데, 대신 일요일 오후로 미루면 괜찮을까? 아니면 그때 바쁘면 다음 주 수요일에 저녁 먹자, 미안한 마음에 내가 살게. 어느 쪽이 나은지 알려줘."},
+    {id:"rp3",topic:"selfintro",kind:"exp",
+      en:"Tell me about a time you had to cancel or change plans with someone. What happened, and how did you handle it?",
+      ko:"누군가와의 약속을 취소하거나 변경해야 했던 경험을 말해보세요. 무슨 일이 있었고 어떻게 해결했나요?",
+      keys:["It happened about ~ ago.","I had no choice but to ~","In the end, it worked out because ~"],
+      model_en:"This happened about six months ago. I had promised to go to a concert with my closest friend — we'd bought the tickets months in advance. But the day before, I came down with a really bad fever and could barely get out of bed. I had no choice but to call her and cancel. Honestly, I was worried she'd be upset, but I called her right away instead of texting, because I thought she deserved a proper explanation. She was disappointed, of course, but she understood. In the end it worked out because I managed to sell my ticket to her coworker, and we went to a different show together a month later. What I learned is that people are usually understanding as long as you're honest and you tell them as early as you can.",
+      model_ko:"이건 약 6개월 전 일이에요. 가장 친한 친구와 콘서트에 가기로 약속했었는데, 몇 달 전에 미리 표까지 사둔 상태였어요. 그런데 전날 심한 열이 나서 침대에서 일어나기도 힘들었죠. 친구에게 전화해서 취소할 수밖에 없었어요. 솔직히 화낼까 봐 걱정했지만, 문자 대신 바로 전화를 걸었어요. 제대로 설명하는 게 예의라고 생각했거든요. 물론 실망했지만 이해해 줬어요. 결국 제 표를 그 친구 동료에게 팔 수 있었고, 한 달 뒤에 다른 공연을 같이 봤어요. 그때 배운 건, 솔직하게 최대한 빨리 말하면 사람들은 대체로 이해해 준다는 거예요."},
+
+    /* ---- 취미 ---- */
+    {id:"rp4",topic:"hobby",kind:"ask",
+      en:"I also have a hobby that I really enjoy. Ask me three or four questions to find out more about it.",
+      ko:"저도 정말 좋아하는 취미가 있어요. 그것에 대해 알아보기 위해 서너 가지 질문해 보세요.",
+      keys:["What got you into ~?","How often do you get to ~?","Is it something you can do ~?"],
+      model_en:"Oh, that sounds interesting — I'd love to hear more. First, what got you into it in the first place? Was it something a friend introduced you to? Second, how often do you actually get to do it these days? I imagine it's hard to find the time. Third, is it something you can do alone, or do you usually need a group? And one more thing — if I wanted to try it myself, what would I need to get started?",
+      model_ko:"오, 흥미롭네요 — 더 듣고 싶어요. 먼저, 애초에 그걸 어떻게 시작하게 되셨어요? 친구가 소개해 준 건가요? 둘째로, 요즘은 얼마나 자주 하실 수 있나요? 시간 내기가 쉽지 않을 것 같은데요. 셋째, 혼자서도 할 수 있는 건가요, 아니면 보통 여러 명이 필요한가요? 하나 더 — 제가 직접 해보고 싶다면 시작할 때 뭐가 필요할까요?"},
+    {id:"rp5",topic:"hobby",kind:"solve",
+      en:"You signed up for a class related to your hobby, but the schedule no longer works for you. Call the center, explain the problem, and ask for two options.",
+      ko:"취미 관련 강좌를 등록했는데 시간표가 더 이상 맞지 않아요. 센터에 전화해 문제를 설명하고 두 가지 방법을 요청하세요.",
+      keys:["I'm calling about ~","The thing is, ~","Would it be possible to ~?"],
+      model_en:"Hi, I'm calling about the photography class I signed up for last month — the Tuesday evening session. The thing is, my work schedule changed and I now have a fixed meeting on Tuesday nights, so I can't attend anymore. I've only been to two out of eight classes so far. I was wondering what my options are. Would it be possible to transfer to the Thursday class instead, if there's still a spot open? If that section is full, could I get a partial refund or a credit I can use for the next term? I'd really rather not just drop it, so I'd appreciate any flexibility you can offer.",
+      model_ko:"안녕하세요, 지난달에 등록한 사진 강좌 관련해서 전화드렸어요 — 화요일 저녁반이요. 문제는 제 근무 일정이 바뀌어서 화요일 밤에 고정 회의가 생겼고, 그래서 더 이상 참석할 수가 없어요. 지금까지 8회 중 2회만 들었고요. 어떤 방법이 있는지 궁금해서요. 혹시 자리가 남아 있다면 목요일반으로 옮기는 게 가능할까요? 그 반이 다 찼다면, 부분 환불이나 다음 학기에 쓸 수 있는 수강권으로 전환이 가능할까요? 그냥 포기하고 싶지는 않아서요, 배려해 주시면 정말 감사하겠습니다."},
+    {id:"rp6",topic:"hobby",kind:"exp",
+      en:"Tell me about a time something went wrong while you were doing your hobby. What was the problem and how did you solve it?",
+      ko:"취미 활동 중에 문제가 생겼던 경험을 말해보세요. 무엇이 문제였고 어떻게 해결했나요?",
+      keys:["Out of nowhere, ~","I ended up ~ing","Looking back, ~"],
+      model_en:"A couple of years ago I went on a photo trip to the east coast to shoot the sunrise. I'd planned it for weeks — I woke up at four in the morning and drove two hours to get there. But right as the sun was coming up, out of nowhere my camera battery died, and I realized I'd left the spare charging at home. I was so frustrated I almost gave up and drove back. Instead, I ended up shooting the whole thing on my phone. Honestly, some of those photos turned out better than what I usually get with my camera, because I stopped worrying about the settings and just focused on the scene. Looking back, that mistake actually taught me something — the gear matters far less than being there at the right moment. Now I always keep a spare battery in my bag, but I also worry a lot less about equipment.",
+      model_ko:"몇 년 전에 일출을 찍으려고 동해안으로 사진 여행을 갔어요. 몇 주 동안 계획했고, 새벽 4시에 일어나 두 시간을 운전해서 도착했죠. 그런데 해가 막 떠오르는 순간 갑자기 카메라 배터리가 나갔고, 여분 배터리를 집에서 충전 중인 채로 두고 온 걸 깨달았어요. 너무 허탈해서 그냥 돌아갈 뻔했죠. 대신 결국 전부 휴대폰으로 찍었어요. 솔직히 그중 몇 장은 평소 카메라로 찍은 것보다 잘 나왔는데, 설정에 신경 쓰는 걸 멈추고 풍경 자체에만 집중했기 때문이에요. 돌이켜보면 그 실수가 오히려 가르쳐 준 게 있어요 — 장비보다 그 순간에 그곳에 있는 게 훨씬 중요하다는 거요. 지금은 항상 여분 배터리를 챙기지만, 장비에 대한 걱정은 훨씬 줄었어요."},
+
+    /* ---- 여행 ---- */
+    {id:"rp7",topic:"travel",kind:"ask",
+      en:"You are planning a trip and you are calling a travel agency. Ask three or four questions to get the information you need.",
+      ko:"여행을 계획 중이라 여행사에 전화했어요. 필요한 정보를 얻기 위해 서너 가지 질문하세요.",
+      keys:["I'd like to ask about ~","Does the package include ~?","What's your cancellation policy?"],
+      model_en:"Hello, I'd like to ask about your five-day package to Da Nang in early October. First, what exactly does the package include — are flights, transfers, and breakfast all covered, or is it accommodation only? Second, how many people usually join one group, and is there a guide who speaks English? Third, what's your cancellation policy if I have to change my dates? And finally, is there any discount if two of us book together?",
+      model_ko:"안녕하세요, 10월 초 다낭 4박 5일 패키지에 대해 여쭤보고 싶어요. 먼저, 패키지에 정확히 뭐가 포함되나요 — 항공, 픽업, 조식이 다 포함인가요, 아니면 숙박만인가요? 둘째로, 한 그룹에 보통 몇 명이 가고, 영어를 하는 가이드가 있나요? 셋째, 날짜를 변경해야 할 경우 취소 규정이 어떻게 되나요? 마지막으로, 두 명이 함께 예약하면 할인이 있나요?"},
+    {id:"rp8",topic:"travel",kind:"solve",
+      en:"You arrived at your hotel late at night, but they cannot find your reservation. Explain the situation to the front desk and work out a solution.",
+      ko:"늦은 밤 호텔에 도착했는데 예약을 찾을 수 없다고 합니다. 프런트에 상황을 설명하고 해결책을 찾으세요.",
+      keys:["There seems to be a mix-up.","I have the confirmation right here.","If that's not possible, could you ~?"],
+      model_en:"Excuse me, there seems to be a mix-up with my reservation. I booked a double room for three nights under the name Kim, and I have the confirmation email right here on my phone — you can see the booking number and the amount that was already charged to my card. I understand it may not be your fault, but it's almost midnight and I've been travelling since this morning, so I really need a room tonight. Could you check again under my first name, or under the booking site's reference number? If the room I booked genuinely isn't available, could you either upgrade me to whatever you have left at the same rate, or arrange a room at a nearby hotel and cover the difference? I'd appreciate it if we could sort this out quickly.",
+      model_ko:"실례합니다, 제 예약에 착오가 있는 것 같아요. 김이라는 이름으로 3박 더블룸을 예약했고, 확인 메일이 바로 여기 제 휴대폰에 있어요 — 예약 번호와 이미 카드에서 결제된 금액을 보실 수 있어요. 직원분 잘못이 아닐 수도 있다는 건 이해하지만, 지금 거의 자정이고 아침부터 이동 중이라 오늘 밤 방이 정말 필요해요. 제 이름으로 다시 확인해 주시거나 예약 사이트 참조번호로 찾아봐 주시겠어요? 제가 예약한 방이 정말 없다면, 남아 있는 방으로 같은 요금에 업그레이드해 주시거나, 근처 호텔에 방을 잡아주고 차액을 부담해 주실 수 있을까요? 빨리 해결됐으면 좋겠습니다."},
+    {id:"rp9",topic:"travel",kind:"exp",
+      en:"Tell me about a time something went wrong during a trip — a delay, a cancellation, or something you lost. How did you deal with it?",
+      ko:"여행 중 문제가 생겼던 경험을 말해보세요 — 지연, 취소, 분실 등. 어떻게 대처했나요?",
+      keys:["To make matters worse, ~","At first I panicked, but ~","It turned into one of the best parts of the trip."],
+      model_en:"Three years ago I was flying back from Osaka, and about an hour before boarding they announced that our flight had been cancelled because of a typhoon. To make matters worse, it was a Sunday night and I had an important meeting the next morning. At first I panicked, but then I got in line at the service desk right away instead of waiting for an email, and I was one of the first to be rebooked. The airline put us up in a hotel near the airport for the night. I emailed my manager to explain, moved the meeting to the afternoon, and honestly, I got an unexpected extra day in Osaka. I spent that morning walking around a neighbourhood I'd never seen. Looking back, it turned into one of the best parts of the trip. Since then, I always leave a buffer day when I travel before something important.",
+      model_ko:"3년 전 오사카에서 돌아오는 길이었는데, 탑승 한 시간쯤 전에 태풍 때문에 항공편이 취소됐다는 안내가 나왔어요. 설상가상으로 일요일 밤이었고 다음 날 아침에 중요한 회의가 있었죠. 처음엔 당황했지만, 메일을 기다리는 대신 바로 서비스 데스크 줄에 섰고 가장 먼저 재예약을 받은 축에 들었어요. 항공사가 공항 근처 호텔을 하룻밤 잡아줬고요. 팀장님께 메일로 상황을 설명하고 회의를 오후로 옮겼는데, 솔직히 오사카에서 예상 못 한 하루를 더 얻은 셈이었어요. 그날 오전엔 한 번도 안 가본 동네를 걸어 다녔죠. 돌이켜보면 그게 그 여행에서 제일 좋았던 부분 중 하나가 됐어요. 그 뒤로는 중요한 일정 앞에 여행할 땐 항상 하루 여유를 둡니다."},
+
+    /* ---- 직장 ---- */
+    {id:"rp10",topic:"work",kind:"ask",
+      en:"A friend told you about a job opening at their company. Ask your friend three or four questions about the position.",
+      ko:"친구가 자기 회사의 채용 공고를 알려줬어요. 그 자리에 대해 친구에게 서너 가지 질문하세요.",
+      keys:["What exactly would I be doing?","What's the team like?","Is there any room for ~?"],
+      model_en:"That's great to hear — thanks for thinking of me. Can I ask a few things before I apply? First, what exactly would I be doing day to day? The posting was pretty vague about the actual responsibilities. Second, what's the team like — how many people, and who would I be reporting to? Third, is the company flexible about working from home, or do they expect you in the office five days a week? And last, is there any room for growth, or is it more of a fixed role?",
+      model_ko:"좋은 소식이네 — 나 생각해 줘서 고마워. 지원하기 전에 몇 가지 물어봐도 될까? 먼저, 실제로 매일 무슨 일을 하게 되는 거야? 공고에는 실제 업무가 꽤 모호하게 적혀 있더라고. 둘째로, 팀은 어때 — 몇 명이고 누구에게 보고하게 돼? 셋째, 회사가 재택근무에 유연한 편이야, 아니면 주 5일 출근을 기대해? 마지막으로, 성장할 여지가 있는 자리야, 아니면 고정된 역할에 가까워?"},
+    {id:"rp11",topic:"work",kind:"solve",
+      en:"You realize you cannot finish an important project by the deadline. Call your manager, explain why, and propose a new plan.",
+      ko:"중요한 프로젝트를 마감까지 끝낼 수 없다는 걸 알게 됐어요. 상사에게 전화해 이유를 설명하고 새 계획을 제안하세요.",
+      keys:["I wanted to flag this early.","The main bottleneck is ~","What I'd propose is ~"],
+      model_en:"Hi, do you have five minutes? I wanted to flag something early rather than surprise you on Friday. I've been working on the client report, and I don't think I can deliver the full version by Thursday. The main bottleneck is that we're still waiting on the sales data from the finance team, and they told me it won't be ready until Wednesday evening. That leaves me less than a day for the analysis. What I'd propose is this: I can send you the completed sections — the summary and the market analysis — by Thursday morning, so the client has something to review. Then I'd deliver the full report by Monday noon. Alternatively, if Thursday is absolutely fixed, I could ask Minji to take over the formatting so I can focus on the numbers. Which would you prefer?",
+      model_ko:"안녕하세요, 5분만 시간 되실까요? 금요일에 갑자기 말씀드리는 대신 미리 말씀드리고 싶었어요. 고객사 보고서를 작업 중인데, 목요일까지 완성본을 드리기는 어려울 것 같습니다. 가장 큰 병목은 재무팀 매출 데이터를 아직 못 받았다는 건데, 수요일 저녁에나 준비된다고 하더라고요. 그러면 분석할 시간이 하루도 안 남습니다. 제가 제안드리고 싶은 건 이거예요: 완성된 부분 — 요약과 시장 분석 — 은 목요일 오전에 보내드려서 고객사가 먼저 검토할 수 있게 하고, 전체 보고서는 월요일 정오까지 드리는 겁니다. 아니면 목요일이 절대 못 미루는 일정이라면, 민지님께 서식 작업을 맡기고 제가 수치에 집중하는 방법도 있고요. 어느 쪽이 나으실까요?"},
+    {id:"rp12",topic:"work",kind:"exp",
+      en:"Tell me about a difficult problem you faced at work and how you solved it.",
+      ko:"직장에서 겪은 어려운 문제와 그것을 어떻게 해결했는지 말해보세요.",
+      keys:["We were up against a tight deadline.","What I did first was ~","In hindsight, ~"],
+      model_en:"About a year ago, our team was up against a really tight deadline on a product launch, and two days before we went live, we found a bug that broke the payment page for anyone using an older browser. It sounds small, but it would have affected maybe fifteen percent of our users. Everyone started panicking and pointing fingers. What I did first was stop the discussion and get us to actually measure the impact — how many users, and how much revenue. Once we had numbers, it was much easier to decide. We agreed to launch on time but with a simple fallback page for those browsers, and then fix it properly the following week. It wasn't the perfect solution, but it was the right trade-off. In hindsight, the real lesson was that in a crisis, getting data on the table calms people down faster than any amount of discussion.",
+      model_ko:"1년쯤 전에 저희 팀이 제품 출시로 굉장히 빠듯한 마감에 쫓기고 있었는데, 출시 이틀 전에 구형 브라우저에서 결제 페이지가 깨지는 버그를 발견했어요. 사소해 보이지만 전체 사용자의 15% 정도에 영향을 줄 수 있는 문제였죠. 다들 당황해서 서로 탓하기 시작했고요. 제가 가장 먼저 한 일은 논쟁을 멈추고 실제 영향을 측정하게 만든 거예요 — 사용자가 몇 명이고 매출이 얼마인지요. 숫자가 나오니 결정이 훨씬 쉬워졌어요. 예정대로 출시하되 그 브라우저에는 간단한 대체 페이지를 띄우고, 다음 주에 제대로 고치기로 합의했죠. 완벽한 해결책은 아니었지만 올바른 절충이었어요. 돌이켜보면 진짜 교훈은, 위기 상황에서는 아무리 오래 토론하는 것보다 데이터를 테이블에 올리는 게 사람들을 더 빨리 진정시킨다는 거였습니다."},
+
+    /* ---- 운동 ---- */
+    {id:"rp13",topic:"fitness",kind:"ask",
+      en:"You want to join a gym near your house. Ask the staff three or four questions about the membership and the facilities.",
+      ko:"집 근처 헬스장에 등록하려고 해요. 직원에게 회원권과 시설에 대해 서너 가지 질문하세요.",
+      keys:["How much is it for ~?","Do you offer ~?","Is there a lock-in period?"],
+      model_en:"Hi, I'm thinking about joining, but I have a few questions first. How much is it for a three-month membership, and is there a discount if I pay up front? Second, do you offer any personal training sessions, and roughly what does one session cost? Third, when are your busiest hours? I usually come around seven in the evening and I don't want to wait for machines. And one more — is there a lock-in period, or can I cancel any time if I move?",
+      model_ko:"안녕하세요, 등록을 고민 중인데 몇 가지 여쭤보고 싶어요. 3개월 회원권은 얼마고, 일시불로 내면 할인이 있나요? 둘째로, 개인 트레이닝 수업이 있나요, 그리고 1회에 대략 얼마인가요? 셋째, 가장 붐비는 시간대가 언제인가요? 저는 보통 저녁 7시쯤 오는데 기구를 기다리고 싶지 않아서요. 하나 더 — 의무 약정 기간이 있나요, 아니면 이사하게 되면 언제든 해지할 수 있나요?"},
+    {id:"rp14",topic:"fitness",kind:"solve",
+      en:"You paid for a gym membership, but the equipment you use most has been out of order for two weeks. Explain the problem and ask for a solution.",
+      ko:"헬스장 회원권을 결제했는데, 가장 많이 쓰는 기구가 2주째 고장 나 있어요. 문제를 설명하고 해결을 요청하세요.",
+      keys:["I've been a member since ~","To be honest, it's frustrating because ~","I'd be happy with either ~ or ~"],
+      model_en:"Hi, could I speak to the manager for a second? I've been a member here since March, and I come in almost every evening. The thing is, both of the rowing machines have been out of order for over two weeks now, and that's honestly the main reason I joined this gym. To be honest, it's frustrating because I'm paying the full monthly fee but I can't use the equipment I signed up for, and no one has said when it'll be fixed. Could you tell me when the repair is scheduled? And in the meantime, I'd be happy with either a partial credit on next month's fee, or a free week added to my membership. I'm not trying to cause trouble — I just don't think I should pay full price for a facility that isn't complete.",
+      model_ko:"안녕하세요, 매니저님과 잠깐 얘기할 수 있을까요? 저는 3월부터 회원이었고 거의 매일 저녁에 와요. 그런데 로잉 머신 두 대가 2주 넘게 고장 나 있는데, 사실 그게 이 헬스장에 등록한 가장 큰 이유였거든요. 솔직히 답답한 게, 월 회비는 전액 내고 있는데 정작 등록한 이유였던 기구를 못 쓰고 있고, 언제 고쳐지는지 아무도 알려주지 않아서요. 수리 일정이 언제인지 알려주실 수 있나요? 그리고 그동안은 다음 달 회비 일부 감면이나 회원권 1주 무료 연장 중 어느 쪽이든 좋습니다. 트집 잡으려는 게 아니라, 시설이 온전하지 않은데 정가를 내는 건 아니라고 생각해서요."},
+    {id:"rp15",topic:"fitness",kind:"exp",
+      en:"Tell me about a time you got injured or had to stop exercising for a while. What happened and what did you do?",
+      ko:"부상을 당했거나 한동안 운동을 쉬어야 했던 경험을 말해보세요. 무슨 일이 있었고 어떻게 했나요?",
+      keys:["I overdid it and ~","The doctor told me to ~","It taught me to ~"],
+      model_en:"Two winters ago I decided to train for a half marathon, and I was pretty impatient about it. I went from running maybe ten kilometres a week to almost forty within a month. Predictably, I overdid it and ended up with a knee injury — it hurt just walking down stairs. The doctor told me to stop running completely for six weeks and start physical therapy. That was really hard for me mentally, because running was how I dealt with stress. So instead of doing nothing, I switched to swimming and cycling, which kept me active without loading the knee. I also started doing the strength exercises my therapist gave me, which I'd always skipped before. I came back slowly, and I actually ran the race the following spring. It taught me to build up gradually and to take rest days seriously — now I do strength training twice a week no matter what.",
+      model_ko:"두 해 전 겨울에 하프 마라톤을 준비하기로 했는데, 제가 꽤 성급했어요. 주당 10킬로 정도 뛰던 걸 한 달 만에 거의 40킬로까지 늘렸죠. 당연하게도 무리해서 무릎을 다쳤어요 — 계단을 내려가는 것만으로도 아팠죠. 의사 선생님이 6주간 달리기를 완전히 멈추고 물리치료를 시작하라고 하셨어요. 달리기가 스트레스를 푸는 방법이었기 때문에 정신적으로 정말 힘들었어요. 그래서 아무것도 안 하는 대신 수영과 자전거로 바꿨고, 무릎에 부담 없이 계속 움직일 수 있었죠. 그리고 늘 건너뛰던 치료사가 준 근력 운동도 시작했어요. 천천히 복귀했고, 실제로 다음 해 봄에 그 대회를 완주했습니다. 그 일로 점진적으로 늘리는 것과 휴식일을 진지하게 여기는 걸 배웠어요 — 지금은 무슨 일이 있어도 주 2회 근력 운동을 합니다."},
+
+    /* ---- 음식점 ---- */
+    {id:"rp16",topic:"restaurant",kind:"ask",
+      en:"You want to book a table for a special dinner. Call the restaurant and ask three or four questions before you reserve.",
+      ko:"특별한 저녁 식사를 위해 예약하려고 합니다. 식당에 전화해 예약 전에 서너 가지 질문하세요.",
+      keys:["I'd like to make a reservation for ~","Do you have ~ options?","Would it be possible to ~?"],
+      model_en:"Hello, I'd like to make a reservation for six people this Saturday evening, around seven — it's for my mother's birthday. Before I book, could I ask a few things? First, do you have a private room or at least a quieter table, since we'd like to talk? Second, do you have any vegetarian options on the menu? One of my friends doesn't eat meat. Third, would it be possible to bring our own cake, and do you charge a corkage or cake fee? And finally, how long can we keep the table? I'd hate to feel rushed.",
+      model_ko:"안녕하세요, 이번 주 토요일 저녁 7시쯤 6명 예약하고 싶어요 — 어머니 생신이라서요. 예약 전에 몇 가지 여쭤봐도 될까요? 먼저, 대화를 나눌 수 있게 룸이 있거나 최소한 조용한 자리가 있을까요? 둘째로, 메뉴에 채식 옵션이 있나요? 친구 중 한 명이 고기를 안 먹어서요. 셋째, 케이크를 가져가도 될까요, 그리고 콜키지나 케이크 반입료가 있나요? 마지막으로, 자리를 얼마나 쓸 수 있나요? 쫓기듯 먹고 싶지는 않아서요."},
+    {id:"rp17",topic:"restaurant",kind:"solve",
+      en:"The food you ordered came out wrong and your friend has been waiting a long time. Explain the situation to the server and ask them to fix it.",
+      ko:"주문한 음식이 잘못 나왔고 친구는 오래 기다렸어요. 종업원에게 상황을 설명하고 해결을 요청하세요.",
+      keys:["I'm sorry to bother you, but ~","We've been waiting for about ~","Would you mind ~ing?"],
+      model_en:"Excuse me, I'm sorry to bother you, but there's a problem with our order. I ordered the seafood pasta without shrimp because my friend has a shellfish allergy, and I mentioned it twice when we ordered — but this dish clearly has shrimp in it. On top of that, my friend's dish hasn't come out at all, and we've been waiting for about forty minutes now. Would you mind taking this back and having the kitchen remake it without the shrimp? And could you check on the other dish as well? We have to leave by eight, so if it's going to take much longer, we'd rather just cancel that one. I understand it gets busy, but we would appreciate it if you could sort this out quickly.",
+      model_ko:"실례합니다, 번거롭게 해서 죄송한데 주문에 문제가 있어요. 친구가 갑각류 알레르기가 있어서 새우를 빼고 해산물 파스타를 주문했고 주문할 때 두 번이나 말씀드렸는데, 이 요리에 새우가 분명히 들어 있어요. 게다가 친구 음식은 아예 나오지도 않았고 40분 정도 기다리고 있습니다. 이걸 물려주시고 주방에 새우 빼고 다시 만들어 달라고 해주시겠어요? 그리고 다른 요리도 확인해 주실 수 있나요? 저희가 8시까지는 나가야 해서, 훨씬 더 걸릴 것 같으면 그건 차라리 취소하겠습니다. 바쁘신 건 이해하지만 빨리 처리해 주시면 감사하겠습니다."},
+    {id:"rp18",topic:"restaurant",kind:"exp",
+      en:"Tell me about a time you had a bad experience at a restaurant. What went wrong and how was it handled?",
+      ko:"식당에서 좋지 않은 경험을 했던 때를 말해보세요. 무엇이 잘못됐고 어떻게 처리됐나요?",
+      keys:["We had booked well in advance.","What bothered me most was ~","To be fair, ~"],
+      model_en:"Last year I took my parents out for their wedding anniversary at a fairly nice restaurant downtown. We had booked well in advance and even confirmed by phone that morning. But when we got there, they had no record of our reservation and the place was completely full. We ended up standing near the entrance for twenty minutes while they figured it out. What bothered me most wasn't the mistake itself — it was that nobody apologized or explained anything until I asked. To be fair, once the manager came out, he handled it really well. He found us a table in about ten minutes, brought out complimentary appetizers, and took the dessert off the bill. My parents actually ended up having a good evening. So it started badly, but I'd still go back, mostly because of how the manager recovered. It reminded me that how you fix a mistake matters more than the mistake.",
+      model_ko:"작년에 부모님 결혼기념일에 시내의 꽤 괜찮은 식당으로 모시고 갔어요. 한참 전에 예약했고 그날 아침에 전화로 확인까지 했죠. 그런데 도착해 보니 저희 예약 기록이 없었고 가게는 완전히 만석이었어요. 결국 그들이 상황을 파악하는 20분 동안 입구 근처에 서 있었죠. 가장 거슬렸던 건 실수 자체가 아니라, 제가 물어보기 전까지 아무도 사과하거나 설명해 주지 않았다는 거예요. 공평하게 말하자면, 매니저가 나온 뒤로는 정말 잘 처리해 줬어요. 10분쯤 만에 자리를 마련해 줬고, 서비스 애피타이저를 내주고 디저트는 계산에서 빼줬죠. 부모님은 결국 좋은 저녁을 보내셨어요. 시작은 나빴지만 저는 다시 갈 것 같아요, 주로 매니저가 수습한 방식 때문에요. 실수보다 실수를 수습하는 방식이 더 중요하다는 걸 다시 느꼈습니다."},
+
+    /* ---- 집 ---- */
+    {id:"rp19",topic:"home",kind:"ask",
+      en:"You are looking for a new place to live. Ask the real estate agent three or four questions about the apartment.",
+      ko:"새로 살 곳을 찾고 있어요. 부동산 중개인에게 그 아파트에 대해 서너 가지 질문하세요.",
+      keys:["Could you tell me about ~?","Is ~ included in the rent?","How far is it from ~?"],
+      model_en:"Thanks for showing me around. Could I ask a few things before I decide? First, what's the monthly rent, and are utilities like water and internet included, or are those separate? Second, how old is the building, and has the bathroom or the kitchen been renovated recently? Third, how far is it from the nearest subway station on foot? And one thing I really care about — how noisy is it? Is the unit facing the main road, and are the neighbours mostly families or students?",
+      model_ko:"보여주셔서 감사합니다. 결정하기 전에 몇 가지 여쭤봐도 될까요? 먼저, 월세가 얼마고 수도나 인터넷 같은 관리비는 포함인가요, 아니면 별도인가요? 둘째로, 건물이 얼마나 됐고 화장실이나 주방을 최근에 수리했나요? 셋째, 가장 가까운 지하철역까지 걸어서 얼마나 걸리나요? 그리고 제가 정말 신경 쓰는 게 하나 있는데 — 얼마나 시끄러운가요? 이 집이 큰길 쪽을 향하고 있나요, 그리고 이웃은 주로 가족인가요 학생인가요?"},
+    {id:"rp20",topic:"home",kind:"solve",
+      en:"Water is leaking in your apartment. Call the landlord, explain the problem, and ask them to take care of it.",
+      ko:"집에 누수가 생겼어요. 집주인에게 전화해 문제를 설명하고 조치를 요청하세요.",
+      keys:["I'm calling because ~","It's been getting worse since ~","Could you send someone ~?"],
+      model_en:"Hello, this is Jiwon from unit 502. I'm calling because there's water leaking from the ceiling in my bathroom. I first noticed it on Tuesday — it was just a damp spot, but it's been getting worse since yesterday, and now it's actually dripping. The paint is starting to peel and I'm worried about mould. I've put a bucket underneath for now, but I don't think this is something I can fix myself. Could you send someone to look at it as soon as possible, ideally tomorrow? I work from home on Thursdays, so any time that day would work. If it turns out the pipe is shared with the unit upstairs, could you also let them know? I'd really like to get this sorted before it damages the floor.",
+      model_ko:"안녕하세요, 502호 지원입니다. 화장실 천장에서 물이 새서 전화드렸어요. 화요일에 처음 발견했는데 그땐 그냥 젖은 자국이었거든요. 그런데 어제부터 점점 심해져서 지금은 실제로 물이 떨어지고 있어요. 페인트가 벗겨지기 시작했고 곰팡이도 걱정됩니다. 일단 아래에 양동이를 받쳐뒀는데, 제가 고칠 수 있는 문제는 아닌 것 같아요. 가능한 한 빨리, 되도록 내일 사람을 보내주실 수 있을까요? 목요일에는 재택근무라 그날은 아무 때나 괜찮습니다. 만약 윗집과 배관이 연결된 문제라면 그쪽에도 알려주실 수 있을까요? 바닥이 상하기 전에 해결하고 싶어요."},
+    {id:"rp21",topic:"home",kind:"exp",
+      en:"Tell me about a problem you once had at home — something broke or stopped working. How did you handle it?",
+      ko:"집에서 겪었던 문제를 말해보세요 — 뭔가 고장 났거나 작동하지 않았던 일. 어떻게 해결했나요?",
+      keys:["Of all times, it happened ~","I had to make do with ~","It took about ~ to get it fixed."],
+      model_en:"Last summer my air conditioner completely died, and of all times, it happened during the hottest week of the year — it was over thirty-five degrees for about ten days straight. I tried the obvious things first: I cleaned the filter, checked the remote batteries, and reset the breaker, but nothing worked. When I called the repair company, they said every technician was booked for a week because everyone's AC was breaking down at once. So I had to make do with two fans and a lot of cold showers. I also ended up spending a lot of evenings at a café near my apartment just to stay cool, which honestly wasn't the worst thing. It took about eight days to get it fixed, and it turned out to be a refrigerant leak. Since then I've had it serviced every spring before summer starts, and it hasn't given me any trouble.",
+      model_ko:"작년 여름에 에어컨이 완전히 고장 났는데, 하필이면 그 해 가장 더웠던 주에 그랬어요 — 열흘 정도 35도가 넘었죠. 먼저 뻔한 것들을 시도했어요. 필터를 청소하고, 리모컨 건전지를 확인하고, 차단기를 내렸다 올려봤지만 아무 소용이 없었죠. 수리업체에 전화했더니 다들 에어컨이 한꺼번에 고장 나서 기사님들이 일주일 치 예약이 꽉 찼다고 하더라고요. 그래서 선풍기 두 대와 찬물 샤워로 버틸 수밖에 없었어요. 시원하게 있으려고 저녁마다 집 근처 카페에서 시간을 보내기도 했는데, 솔직히 그건 나쁘지 않았어요. 고치는 데 8일쯤 걸렸고, 알고 보니 냉매가 새는 문제였어요. 그 뒤로는 매년 봄에 여름 오기 전에 점검을 받고 있고, 그 후로는 문제가 없습니다."},
+
+    /* ---- 날씨 ---- */
+    {id:"rp22",topic:"weather",kind:"ask",
+      en:"I live in a country where the weather is very different from yours. Ask me three or four questions about the weather here.",
+      ko:"저는 당신 나라와 날씨가 매우 다른 곳에 살아요. 이곳 날씨에 대해 서너 가지 질문하세요.",
+      keys:["What's ~ like there?","Does it ever ~?","How do people deal with ~?"],
+      model_en:"That's interesting — I'd love to know what it's actually like. First, what's summer like there? Does it get humid, or is it more of a dry heat? Second, does it ever snow, and if so, does the city shut down when it does? Here even a few centimetres causes chaos. Third, how do people deal with the worst season — do houses have proper heating and cooling, or do people just adapt? And last, is there a season that everyone looks forward to?",
+      model_ko:"흥미롭네요 — 실제로 어떤지 정말 궁금해요. 먼저, 그곳 여름은 어떤가요? 습한가요, 아니면 건조한 더위에 가깝나요? 둘째로, 눈이 오기는 하나요, 온다면 그때 도시가 마비되나요? 여기는 몇 센티만 와도 난리가 나거든요. 셋째, 사람들이 가장 힘든 계절을 어떻게 견디나요 — 집에 제대로 된 난방과 냉방이 있나요, 아니면 그냥 적응하나요? 마지막으로, 다들 기다리는 계절이 있나요?"},
+    {id:"rp23",topic:"weather",kind:"solve",
+      en:"A heavy storm is coming and the outdoor plans you made with a friend have to change. Call your friend, explain, and suggest alternatives.",
+      ko:"큰 폭풍이 온다는 예보로 친구와의 야외 약속을 바꿔야 해요. 친구에게 전화해 설명하고 대안을 제시하세요.",
+      keys:["Have you seen the forecast?","It doesn't look like ~ is going to work.","How about we ~ instead?"],
+      model_en:"Hey, have you seen the forecast for tomorrow? They're saying there's a typhoon coming through, with heavy rain and strong winds all afternoon. It doesn't look like the hiking trip is going to work — honestly, I think the trails will be closed anyway, and it wouldn't be safe. I know we've been planning this for weeks, so I'm disappointed too. But how about we do it next Saturday instead? The forecast looks clear that whole weekend. Or if you'd still like to meet tomorrow, we could go to that indoor climbing gym you mentioned and grab lunch afterwards. Let me know which one you prefer, and I'll take care of the booking either way.",
+      model_ko:"야, 내일 일기예보 봤어? 태풍이 지나간다고 하는데 오후 내내 폭우에 강풍이래. 등산은 못 할 것 같아 — 솔직히 등산로도 통제될 거고 안전하지도 않을 거야. 우리 몇 주 동안 계획한 거라 나도 아쉬워. 대신 다음 주 토요일에 가는 건 어때? 그 주말은 계속 맑다고 나오더라고. 아니면 내일 그래도 만나고 싶으면, 네가 말했던 그 실내 클라이밍장 갔다가 점심 먹는 것도 좋고. 어느 쪽이 좋은지 알려줘, 예약은 어느 쪽이든 내가 할게."},
+    {id:"rp24",topic:"weather",kind:"exp",
+      en:"Tell me about a time extreme weather caused a problem for you. What happened and what did you do?",
+      ko:"극단적인 날씨 때문에 문제를 겪었던 경험을 말해보세요. 무슨 일이 있었고 어떻게 했나요?",
+      keys:["It came down so hard that ~","I was stuck at ~ for hours.","Ever since then, I always ~"],
+      model_en:"A few summers ago we had record rainfall in Seoul — it came down so hard that parts of the city flooded within a couple of hours. I was at the office when it started, and by the time I left, the subway station near my building had been closed because water was coming down the stairs. Taxis were impossible to get, and buses weren't running on the flooded routes. I was stuck at the office for about four hours waiting for it to ease off. In the end, a colleague who lived in the same direction offered me a ride, and what's normally a forty-minute drive took two and a half hours. I got home around midnight, completely soaked. Ever since then, I always check the rain radar before I leave work in the summer, and I keep a spare umbrella and a pair of shoes at my desk. It sounds excessive, but it's saved me twice already.",
+      model_ko:"몇 해 전 여름에 서울에 기록적인 폭우가 내렸어요 — 얼마나 세게 쏟아졌는지 두어 시간 만에 도시 일부가 물에 잠겼죠. 비가 시작됐을 때 저는 사무실에 있었는데, 퇴근할 무렵엔 건물 근처 지하철역이 계단으로 물이 쏟아져 들어와 폐쇄된 상태였어요. 택시는 잡을 수가 없었고, 버스도 침수된 노선은 운행하지 않았죠. 비가 잦아들기를 기다리며 4시간쯤 사무실에 갇혀 있었어요. 결국 같은 방향에 사는 동료가 태워주겠다고 했는데, 평소 40분 걸리는 거리가 두 시간 반이 걸렸어요. 자정쯤 흠뻑 젖은 채로 집에 도착했죠. 그 뒤로는 여름에 퇴근하기 전에 항상 강수 레이더를 확인하고, 책상에 여분 우산과 신발을 두고 있어요. 유난스럽게 들리겠지만 벌써 두 번이나 덕을 봤습니다."},
+
+    /* ---- 재활용 ---- */
+    {id:"rp25",topic:"recycling",kind:"ask",
+      en:"You just moved into a new building. Ask the building manager three or four questions about how recycling works there.",
+      ko:"새 건물로 막 이사했어요. 관리인에게 그곳의 재활용 방식에 대해 서너 가지 질문하세요.",
+      keys:["I just moved in, so ~","Which day is ~ collected?","What am I supposed to do with ~?"],
+      model_en:"Hello, I just moved into unit 302 last week, so I'm still figuring things out. Could I ask you about the recycling here? First, which days are recyclables collected, and is there a specific time I have to put them out by? Second, where exactly is the collection area — is it in the basement or outside the back door? Third, do I need to separate plastic, paper, and glass into different bins, or does everything go together? And one more thing — what am I supposed to do with food waste? Do I need to buy special bags, and where can I get them?",
+      model_ko:"안녕하세요, 지난주에 302호로 막 이사 와서 아직 익숙하지 않은데요. 여기 재활용에 대해 여쭤봐도 될까요? 먼저, 재활용품은 무슨 요일에 수거하고, 몇 시까지 내놓아야 하나요? 둘째로, 배출 장소가 정확히 어디인가요 — 지하인가요 뒷문 밖인가요? 셋째, 플라스틱·종이·유리를 다른 통에 나눠 담아야 하나요, 아니면 다 같이 넣어도 되나요? 하나 더 — 음식물 쓰레기는 어떻게 해야 하나요? 전용 봉투를 사야 하나요, 그리고 어디서 살 수 있나요?"},
+    {id:"rp26",topic:"recycling",kind:"solve",
+      en:"Your neighbours keep putting trash in the wrong bins and it's becoming a real problem. Talk to the building manager and suggest solutions.",
+      ko:"이웃들이 계속 쓰레기를 잘못된 통에 버려서 문제가 되고 있어요. 관리인에게 이야기하고 해결책을 제안하세요.",
+      keys:["I don't want to make a big deal out of it, but ~","It's been going on for ~","One thing that might help is ~"],
+      model_en:"Hi, do you have a minute? I don't want to make a big deal out of it, but I wanted to raise something about the recycling area. For the past month or so, people have been throwing food waste and general trash straight into the plastic bins. It's been going on for weeks now, and it's starting to smell, especially in this heat. I've also noticed the collection crew leaving some bins behind because they're contaminated. I'm not trying to blame anyone — I think a lot of people genuinely don't know the rules, especially the new tenants. One thing that might help is putting clear signs above each bin, ideally with pictures rather than just text. And maybe a short notice in the elevator for a couple of weeks? If it keeps happening after that, perhaps a camera or a designated time for putting things out would make a difference.",
+      model_ko:"안녕하세요, 잠깐 시간 되세요? 크게 문제 삼고 싶진 않은데, 재활용장에 대해 말씀드리고 싶은 게 있어요. 지난 한 달쯤 사람들이 음식물 쓰레기와 일반 쓰레기를 플라스틱 통에 그냥 버리고 있어요. 몇 주째 계속되고 있고, 특히 이렇게 더울 땐 냄새가 나기 시작했어요. 수거하시는 분들이 오염됐다고 몇몇 통은 그냥 두고 가시는 것도 봤고요. 누구를 탓하려는 건 아니에요 — 특히 새로 오신 분들은 정말로 규칙을 모르는 것 같더라고요. 도움이 될 만한 방법 하나는 각 통 위에 명확한 안내판을 붙이는 건데, 글씨보다는 그림이 들어가면 좋을 것 같아요. 그리고 몇 주 정도 엘리베이터에 짧은 공지를 붙이는 건 어떨까요? 그 후에도 계속되면 카메라를 설치하거나 배출 시간을 정하는 것도 효과가 있을 것 같습니다."},
+    {id:"rp27",topic:"recycling",kind:"exp",
+      en:"Tell me about a time you had trouble with recycling or throwing something away. What was the problem and how did you solve it?",
+      ko:"재활용이나 물건을 버리는 일로 곤란했던 경험을 말해보세요. 무엇이 문제였고 어떻게 해결했나요?",
+      keys:["I had no idea ~","It turned out that ~","Now I always check ~ before ~ing."],
+      model_en:"When I moved out of my old apartment two years ago, I had to get rid of a large sofa and an old refrigerator. I had no idea you couldn't just leave big items at the collection point — I actually tried, and the next morning there was a warning sticker on it with a fine notice. It turned out that in Korea you have to buy a large-waste disposal sticker from the district office or online, and each item has a different price depending on its size. So I went to the local community centre, paid about fifteen thousand won for the sofa and eight thousand for the fridge, and stuck the tags on them. Then I had to register the pickup date online. It was more complicated than I expected, and honestly a bit stressful when I was already busy moving. Now I always check the district website before throwing anything large away, and I usually try to give furniture away on a second-hand app first — it's free and someone actually uses it.",
+      model_ko:"2년 전에 예전 아파트에서 이사 나올 때 큰 소파와 오래된 냉장고를 버려야 했어요. 대형 폐기물은 그냥 수거장에 두면 안 된다는 걸 전혀 몰랐죠 — 실제로 그렇게 해봤는데 다음 날 아침에 과태료 경고 스티커가 붙어 있더라고요. 알고 보니 한국에서는 구청이나 온라인에서 대형폐기물 배출 스티커를 사야 하고, 품목마다 크기에 따라 가격이 다르더군요. 그래서 동주민센터에 가서 소파는 15,000원, 냉장고는 8,000원 정도 내고 스티커를 붙였어요. 그리고 온라인으로 수거 날짜를 등록해야 했고요. 생각보다 복잡했고, 이사로 이미 바쁠 때라 솔직히 좀 스트레스였어요. 지금은 큰 물건을 버리기 전에 항상 구청 홈페이지를 확인하고, 가구는 먼저 중고 앱에 무료 나눔으로 올려보는 편이에요 — 돈도 안 들고 실제로 누군가 쓰니까요."},
+
+    /* ---- 기술 ---- */
+    {id:"rp28",topic:"tech",kind:"ask",
+      en:"You want to buy a new phone. Ask the salesperson three or four questions before you decide.",
+      ko:"새 휴대폰을 사려고 해요. 결정하기 전에 판매원에게 서너 가지 질문하세요.",
+      keys:["What's the difference between ~ and ~?","How long does the battery ~?","Does it come with ~?"],
+      model_en:"Hi, I'm looking to replace my phone — I've had this one for about four years. Could I ask a few things? First, what's the main difference between these two models besides the price? Second, how long does the battery actually last with normal use? I take a lot of photos and I'm on the phone a lot for work. Third, does it come with a warranty, and how long is it? And finally, do you have any trade-in deals if I bring in my old phone? I'd rather not pay full price if I don't have to.",
+      model_ko:"안녕하세요, 휴대폰을 바꾸려고 하는데요 — 이걸 4년쯤 썼거든요. 몇 가지 여쭤봐도 될까요? 먼저, 이 두 모델의 가장 큰 차이가 가격 말고 뭔가요? 둘째로, 보통 쓸 때 배터리가 실제로 얼마나 가나요? 사진을 많이 찍고 업무상 통화도 많이 하거든요. 셋째, 보증이 포함되나요, 기간은 얼마인가요? 마지막으로, 쓰던 폰을 가져오면 보상 판매 혜택이 있나요? 굳이 정가를 다 내고 싶지는 않아서요."},
+    {id:"rp29",topic:"tech",kind:"solve",
+      en:"The laptop you bought last week keeps shutting down by itself. Call the store, explain the problem, and ask for a refund or a replacement.",
+      ko:"지난주에 산 노트북이 계속 저절로 꺼져요. 매장에 전화해 문제를 설명하고 환불이나 교환을 요청하세요.",
+      keys:["I bought it on ~ and I still have the receipt.","It happens even when ~","Under your return policy, ~"],
+      model_en:"Hello, I'm calling about a laptop I bought from your store. I bought it on the fifth of this month and I still have the receipt and the original box. The problem is that it keeps shutting down by itself, usually after about twenty minutes of use. It's not overheating as far as I can tell, and it happens even when I'm only browsing the web with nothing else open. I've already tried updating the drivers and doing a factory reset, and it didn't help. Since it's only been eight days and this looks like a hardware defect, under your return policy I'd like either a full refund or a brand-new replacement unit — not a repair, if that's possible. Could you tell me what I need to bring in and whether I should come to the branch or send it in?",
+      model_ko:"안녕하세요, 그쪽 매장에서 산 노트북 때문에 전화드렸어요. 이번 달 5일에 샀고 영수증과 원래 박스도 그대로 가지고 있습니다. 문제는 노트북이 계속 저절로 꺼진다는 건데, 보통 20분 정도 쓰면 그래요. 제가 보기엔 과열은 아니고, 다른 건 아무것도 안 켜고 웹만 볼 때도 그럽니다. 드라이버 업데이트와 초기화도 이미 해봤는데 소용없었어요. 산 지 8일밖에 안 됐고 하드웨어 결함으로 보이니, 반품 규정에 따라 전액 환불이나 새 제품 교환을 원합니다 — 가능하다면 수리 말고요. 뭘 가지고 가야 하는지, 그리고 매장으로 가야 하는지 택배로 보내야 하는지 알려주시겠어요?"},
+    {id:"rp30",topic:"tech",kind:"exp",
+      en:"Tell me about a time a device broke down at a really bad moment. What happened and how did you deal with it?",
+      ko:"하필 중요한 순간에 기기가 고장 났던 경험을 말해보세요. 무슨 일이 있었고 어떻게 대처했나요?",
+      keys:["Of all the times for it to happen, ~","Luckily, I had ~","That's when I learned to ~"],
+      model_en:"About two years ago my laptop died on me the night before a major presentation. I'd been working on the slides until around eleven, and when I closed it and opened it again, the screen just stayed black. Of all the times for it to happen, it had to be then. I tried everything — holding the power button, unplugging it, even taking the battery out. Nothing. Luckily, I had been saving the file to cloud storage as I worked, so I hadn't actually lost anything. I borrowed my roommate's laptop, downloaded the file, and spent another hour making sure the formatting hadn't broken. The presentation went fine, and honestly nobody knew what had happened. That's when I learned to never rely on a single device or a single copy. Now everything I work on syncs automatically, and I always email myself a PDF version the night before anything important.",
+      model_ko:"2년쯤 전에 중요한 발표 전날 밤에 노트북이 죽었어요. 11시쯤까지 슬라이드를 작업하다가 덮었다 다시 열었는데 화면이 그냥 까맣더라고요. 하필이면 그때 그런 일이 생긴 거죠. 전원 버튼 길게 누르기, 코드 뽑기, 배터리 분리까지 다 해봤어요. 아무 소용 없었죠. 다행히 작업하면서 파일을 클라우드에 저장해 두고 있어서 실제로 잃은 건 없었어요. 룸메이트 노트북을 빌려서 파일을 내려받고, 서식이 깨지지 않았는지 확인하는 데 한 시간을 더 썼습니다. 발표는 무사히 끝났고, 솔직히 무슨 일이 있었는지 아무도 몰랐어요. 그때 기기 하나나 사본 하나에만 의존하면 안 된다는 걸 배웠어요. 지금은 작업하는 모든 게 자동으로 동기화되고, 중요한 일 전날 밤에는 항상 PDF로 만들어 제 메일로 보내둡니다."},
+
+    /* ---- 은행 ---- */
+    {id:"rp31",topic:"bank",kind:"ask",
+      en:"You want to open a new bank account. Ask the bank teller three or four questions about the account.",
+      ko:"새 은행 계좌를 개설하려고 해요. 창구 직원에게 계좌에 대해 서너 가지 질문하세요.",
+      keys:["What documents do I need to ~?","Is there a monthly fee?","Can I ~ through the app?"],
+      model_en:"Hello, I'd like to open a savings account. Could I ask a few questions first? First, what documents do I need to bring — is my ID enough, or do I also need proof of address? Second, is there a monthly maintenance fee, and is there a minimum balance I have to keep? Third, what's the interest rate, and does it change if I set up an automatic monthly deposit? And finally, can I do everything through the app afterwards — transfers, statements, and so on — or do I have to come to the branch for some things?",
+      model_ko:"안녕하세요, 적금 계좌를 개설하고 싶은데요. 먼저 몇 가지 여쭤봐도 될까요? 첫째, 어떤 서류를 가져와야 하나요 — 신분증만 있으면 되나요, 아니면 주소 증명도 필요한가요? 둘째, 월 관리 수수료가 있나요, 그리고 유지해야 하는 최소 잔액이 있나요? 셋째, 금리가 어떻게 되고, 매월 자동이체를 설정하면 금리가 달라지나요? 마지막으로, 그 이후에는 앱으로 다 처리할 수 있나요 — 이체, 거래내역 조회 같은 거요 — 아니면 지점에 와야 하는 일도 있나요?"},
+    {id:"rp32",topic:"bank",kind:"solve",
+      en:"You checked your account and found a charge you did not make. Call the bank, explain the situation, and ask them to fix it.",
+      ko:"계좌를 확인했는데 결제한 적 없는 금액이 빠져나갔어요. 은행에 전화해 상황을 설명하고 해결을 요청하세요.",
+      keys:["I noticed a charge I don't recognise.","I've never used ~","Could you freeze ~ and ~?"],
+      model_en:"Hello, I'm calling because I noticed a charge on my account that I don't recognise. It was about a hundred and twenty thousand won, posted yesterday at around two in the morning, to a merchant I've never heard of. I've never used that store, and I was asleep at that time — my card was in my wallet at home. This is the only unusual transaction I can see, but I'm worried there might be more. Could you freeze the card immediately so nothing else goes through, and start a dispute for that transaction? I'd also like to know roughly how long the investigation takes and whether the money will be returned in the meantime. And could you issue me a new card? I'd rather not keep using this one.",
+      model_ko:"안녕하세요, 제 계좌에서 모르는 결제 건이 있어서 전화드렸어요. 12만 원 정도인데, 어제 새벽 2시쯤 처음 들어보는 가맹점에서 승인됐어요. 저는 그 가게를 이용한 적이 없고, 그 시간에는 자고 있었어요 — 카드도 집 지갑 안에 있었고요. 지금 보이는 이상 거래는 이것뿐인데 더 있을까 봐 걱정됩니다. 다른 결제가 더 되지 않도록 카드를 즉시 정지해 주시고, 그 거래에 대해 이의 제기를 접수해 주시겠어요? 그리고 조사가 대략 얼마나 걸리는지, 그동안 금액이 임시로 환급되는지도 알고 싶습니다. 카드도 새로 발급해 주실 수 있을까요? 이 카드는 계속 쓰고 싶지 않아서요."},
+    {id:"rp33",topic:"bank",kind:"exp",
+      en:"Tell me about a problem you once had with a bank, a card, or an ATM. How was it resolved?",
+      ko:"은행, 카드, ATM과 관련해 겪었던 문제를 말해보세요. 어떻게 해결됐나요?",
+      keys:["The machine ~ but ~ didn't come out.","I was on hold for ~","It got sorted out within ~"],
+      model_en:"A few years ago I was withdrawing cash from an ATM late at night, and the machine made all the usual noises and then said the transaction was complete — but the money never came out. The receipt showed that three hundred thousand won had been withdrawn. It was almost midnight and the bank was closed, so I called the number on the back of the machine. I was on hold for nearly twenty minutes, which was frustrating, but the agent was actually very helpful once I got through. She told me exactly what to do: note the machine number, keep the receipt, and file a report, which she started for me over the phone. She explained that the machine would be audited the next business day and any extra cash inside would be matched against my claim. It got sorted out within three days and the money was refunded in full. It was stressful at the time, but the process was more reliable than I expected. Now I always take the receipt, even for small withdrawals.",
+      model_ko:"몇 년 전 밤늦게 ATM에서 현금을 인출하는데, 기계가 평소처럼 소리를 다 내고 거래가 완료됐다고 떴는데 돈이 나오지 않았어요. 영수증에는 30만 원이 출금된 걸로 찍혀 있었고요. 거의 자정이라 은행은 문을 닫았고, 그래서 기계 뒤에 적힌 번호로 전화했어요. 20분 가까이 대기해야 해서 답답했지만, 연결되고 나서는 상담원이 정말 도움이 됐어요. 기기 번호를 적어두고, 영수증을 보관하고, 신고를 접수하라고 정확히 알려줬는데 전화상으로 접수까지 해주셨어요. 다음 영업일에 기계를 정산해서 안에 남은 현금과 제 신고 내용을 대조한다고 설명해 주셨고요. 3일 안에 처리돼서 전액 환불받았습니다. 당시엔 스트레스였지만 절차는 생각보다 믿을 만했어요. 지금은 적은 금액을 뽑을 때도 항상 영수증을 챙깁니다."},
+
+    /* ---- 패션 ---- */
+    {id:"rp34",topic:"fashion",kind:"ask",
+      en:"You are shopping for a jacket. Ask the store clerk three or four questions before you buy it.",
+      ko:"재킷을 사려고 매장에 있어요. 구매 전에 점원에게 서너 가지 질문하세요.",
+      keys:["Do you have this in ~?","What's it made of?","What's your exchange policy?"],
+      model_en:"Excuse me, could you help me with something? I like this jacket, but do you have it in a size up? This one feels a little tight around the shoulders. Also, what's it made of — is it wool, or is there synthetic material mixed in? I'm asking because I want something warm enough for winter. Third, can I machine-wash it, or does it have to be dry-cleaned? And one last thing — what's your exchange policy? If I get home and change my mind, how long do I have to bring it back?",
+      model_ko:"실례합니다, 좀 도와주실 수 있을까요? 이 재킷이 마음에 드는데, 한 사이즈 큰 게 있나요? 이건 어깨가 조금 끼는 것 같아요. 그리고 소재가 뭔가요 — 울인가요, 합성 섬유가 섞여 있나요? 겨울에 입을 만큼 따뜻한 걸 원해서 여쭤봐요. 셋째, 세탁기에 돌려도 되나요, 아니면 드라이클리닝을 해야 하나요? 마지막으로 — 교환 규정이 어떻게 되나요? 집에 가서 마음이 바뀌면 며칠 안에 가져와야 하나요?"},
+    {id:"rp35",topic:"fashion",kind:"solve",
+      en:"The clothes you ordered online arrived in the wrong size. Contact the shop, explain the situation, and ask for an exchange.",
+      ko:"온라인으로 주문한 옷이 잘못된 사이즈로 왔어요. 판매처에 연락해 상황을 설명하고 교환을 요청하세요.",
+      keys:["I placed an order on ~","According to your size chart, ~","I'd like to exchange it for ~"],
+      model_en:"Hello, I placed an order on your website last Monday — order number 8842 — and it arrived yesterday. The problem is that I ordered a medium, but the item I received is clearly a small. The label inside says S, even though the packing slip says medium, so I think it was a picking error on your end. According to your size chart, a medium should fit me, and I'd like to exchange it rather than get a refund because I really like the coat. Could you send me a medium and arrange a pickup for this one? Since the mistake wasn't mine, I'm assuming I don't have to pay the return shipping — could you confirm that? Also, if the medium is out of stock, please let me know as soon as possible and I'll decide whether to wait or cancel.",
+      model_ko:"안녕하세요, 지난 월요일에 사이트에서 주문했는데요 — 주문번호 8842 — 어제 받았습니다. 문제는 제가 M을 주문했는데 받은 물건은 명백히 S라는 거예요. 포장 명세서에는 M이라고 적혀 있는데 안쪽 라벨에는 S라고 되어 있어서, 그쪽에서 잘못 담으신 것 같습니다. 사이즈 표에 따르면 M이 저한테 맞고, 이 코트가 정말 마음에 들어서 환불보다는 교환을 원해요. M으로 보내주시고 이건 수거 신청해 주실 수 있을까요? 제 잘못이 아니니 반품 배송비는 제가 안 내도 되는 것으로 알고 있는데, 확인해 주시겠어요? 그리고 M이 품절이라면 최대한 빨리 알려주세요, 기다릴지 취소할지 결정하겠습니다."},
+    {id:"rp36",topic:"fashion",kind:"exp",
+      en:"Tell me about a time you bought something you couldn't use or had to return. What happened?",
+      ko:"쓸 수 없거나 반품해야 했던 물건을 샀던 경험을 말해보세요. 무슨 일이 있었나요?",
+      keys:["It looked completely different from ~","I should have checked ~","In the end, I ~"],
+      model_en:"Last winter I ordered a coat online during a big sale — it was about forty percent off, so I bought it without thinking too much. When it arrived, it looked completely different from the photos on the website. The colour was much brighter, almost orange instead of the warm brown in the picture, and the fabric felt thin and cheap. I should have checked the reviews more carefully, because when I went back and read them, several people had mentioned exactly the same thing. I tried to return it, but the item was marked as final sale, so I couldn't get a refund. In the end, I listed it on a second-hand app and sold it for about half of what I paid. It was an annoying lesson, but a useful one. Now I never buy clothes online unless the shop has free returns, and I always read the recent reviews with photos before I order anything.",
+      model_ko:"작년 겨울에 큰 세일 기간에 코트를 온라인으로 주문했어요 — 40% 정도 할인이라 별생각 없이 샀죠. 그런데 받아 보니 사이트 사진과 완전히 달라 보였어요. 색이 훨씬 밝아서 사진 속 따뜻한 갈색이 아니라 거의 주황색에 가까웠고, 원단도 얇고 싸구려 같았어요. 후기를 더 꼼꼼히 봤어야 했는데, 다시 들어가서 읽어보니 여러 사람이 정확히 같은 얘기를 해뒀더라고요. 반품하려 했지만 세일 특가라 반품 불가 상품이어서 환불을 못 받았어요. 결국 중고 앱에 올려서 산 가격의 절반쯤에 팔았습니다. 짜증 나는 교훈이었지만 유용했어요. 지금은 무료 반품이 되는 곳이 아니면 옷을 온라인으로 사지 않고, 주문 전에 항상 사진이 있는 최근 후기를 읽어봅니다."},
+
+    /* ---- 지형 ---- */
+    {id:"rp37",topic:"geography",kind:"ask",
+      en:"You are planning a hiking trip to a national park. Call the visitor center and ask three or four questions.",
+      ko:"국립공원으로 등산 여행을 계획 중이에요. 안내센터에 전화해 서너 가지 질문하세요.",
+      keys:["I'm planning to visit ~","How long does the trail take?","Do I need to book ~ in advance?"],
+      model_en:"Hello, I'm planning to visit the park with two friends next Saturday, and I have a few questions. First, which trail would you recommend for people who hike occasionally but aren't experts, and how long does it usually take round trip? Second, do we need to book anything in advance, like a parking spot or an entry permit? Third, is there drinking water along the trail, or should we carry everything with us? And finally, what time does the last shuttle bus leave? I want to make sure we don't get stuck up there.",
+      model_ko:"안녕하세요, 다음 주 토요일에 친구 두 명과 공원에 가려고 하는데 몇 가지 여쭤보고 싶어요. 먼저, 가끔 등산하지만 전문가는 아닌 사람들에게 어떤 코스를 추천하시나요, 그리고 왕복으로 보통 얼마나 걸리나요? 둘째로, 주차 자리나 입장 허가처럼 미리 예약해야 하는 게 있나요? 셋째, 코스 중간에 식수가 있나요, 아니면 전부 챙겨 가야 하나요? 마지막으로, 마지막 셔틀버스는 몇 시에 출발하나요? 산에서 발이 묶이지 않도록 확인하고 싶어서요."},
+    {id:"rp38",topic:"geography",kind:"solve",
+      en:"You took the wrong trail on a mountain and the weather is getting bad. Call the visitor center, explain your situation, and ask for help.",
+      ko:"산에서 길을 잘못 들었고 날씨가 나빠지고 있어요. 안내센터에 전화해 상황을 설명하고 도움을 요청하세요.",
+      keys:["I think we've taken a wrong turn.","We're somewhere near ~","Could you tell us whether we should ~ or ~?"],
+      model_en:"Hello, this is a hiker calling from inside the park — I think we've taken a wrong turn. There are three of us and we started from the east entrance around nine this morning. We were following the blue trail, but we haven't seen a marker for about forty minutes, and the path has gotten much narrower. We're somewhere near a small stream, below a rocky ridge — I can send you our GPS coordinates if that helps. Everyone is fine and nobody is injured, but it's starting to rain and the fog is coming in, and we only have about two hours of daylight left. Could you tell us whether we should turn back the way we came, or keep going down toward the stream until we hit a road? And if we're not out by dark, what number should we call?",
+      model_ko:"안녕하세요, 공원 안에서 전화드리는 등산객인데요 — 길을 잘못 든 것 같아요. 저희는 세 명이고 오늘 아침 9시쯤 동쪽 입구에서 출발했습니다. 파란색 코스를 따라가고 있었는데 40분 정도 표지판을 못 봤고, 길이 훨씬 좁아졌어요. 지금 바위 능선 아래 작은 개울 근처인 것 같은데, 도움이 되면 GPS 좌표를 보내드릴 수 있어요. 다들 괜찮고 다친 사람은 없지만 비가 오기 시작했고 안개가 끼고 있으며, 해가 지기까지 두 시간 정도밖에 안 남았습니다. 저희가 왔던 길로 되돌아가야 할까요, 아니면 개울을 따라 계속 내려가서 도로를 만나야 할까요? 그리고 어두워질 때까지 못 나가면 어느 번호로 전화해야 하나요?"},
+    {id:"rp39",topic:"geography",kind:"exp",
+      en:"Tell me about a time you got lost or took the wrong route while travelling somewhere. How did you find your way?",
+      ko:"어딘가로 이동하다 길을 잃거나 잘못된 경로로 갔던 경험을 말해보세요. 어떻게 길을 찾았나요?",
+      keys:["We must have missed ~","Fortunately, ~","What could have been ~ turned into ~"],
+      model_en:"A few years ago I went hiking on Bukhansan with a friend, and we decided to take a trail we hadn't done before. About two hours in, we realised we hadn't seen a trail marker in a long time — we must have missed a turn somewhere near a stream crossing. My phone had almost no signal and the battery was down to fifteen percent, so we couldn't rely on the map. It was late afternoon and I started to get nervous about the light. Fortunately, my friend suggested we simply follow the water downhill, since streams almost always lead to a road or a village. It took us about an hour and a half, but we came out at a small temple with a bus stop nearby. What could have been a genuinely dangerous situation turned into a good story, but it shook me a little. Since then I always download the offline map before I go, I carry a power bank, and I tell someone which trail I'm taking.",
+      model_ko:"몇 년 전에 친구와 북한산에 등산을 갔는데, 전에 안 가본 코스로 가보기로 했어요. 두 시간쯤 지나서 표지판을 오랫동안 못 봤다는 걸 깨달았죠 — 개울을 건너는 곳 근처에서 갈림길을 놓친 게 분명했어요. 휴대폰은 신호가 거의 안 잡히고 배터리도 15%까지 떨어져서 지도를 믿을 수 없었고요. 늦은 오후라 해가 지는 게 슬슬 불안해지기 시작했어요. 다행히 친구가 그냥 물길을 따라 내려가자고 제안했는데, 개울은 거의 항상 도로나 마을로 이어지니까요. 한 시간 반쯤 걸렸지만 작은 절이 나왔고 근처에 버스 정류장이 있었어요. 정말 위험할 수도 있었던 상황이 좋은 이야깃거리가 됐지만, 조금 겁이 나긴 했어요. 그 뒤로는 가기 전에 항상 오프라인 지도를 받아두고, 보조 배터리를 챙기고, 어느 코스로 가는지 누군가에게 알려둡니다."},
+  ],
 };
 
 /* ---------------- 아이콘 ---------------- */
@@ -2932,6 +3295,11 @@ const ICON_LEFT='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stro
 const ICON_RIGHT='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 5l7 7-7 7"/></svg>';
 const ICON_MOON='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A8.5 8.5 0 1 1 11.2 3a6.5 6.5 0 0 0 9.8 9.8z"/></svg>';
 const ICON_SUN='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4 12H2M22 12h-2M5 5l1.4 1.4M17.6 17.6L19 19M19 5l-1.4 1.4M6.4 17.6L5 19"/></svg>';
+
+const ICON_SPEAK='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.2L12 5.5v13l-4.8-4H4z"/><path d="M16 9.2a4 4 0 0 1 0 5.6"/><path d="M18.6 6.6a7.6 7.6 0 0 1 0 10.8"/></svg>';
+const ICON_SPEAK_OFF='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9.5h3.2L12 5.5v13l-4.8-4H4z"/><path d="M16.5 9.5l4 5M20.5 9.5l-4 5"/></svg>';
+const ICON_MIC='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5.5 11.5a6.5 6.5 0 0 0 13 0"/><path d="M12 18v3"/></svg>';
+const ICON_STOPSQ='<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6.5" y="6.5" width="11" height="11" rx="2.2"/></svg>';
 
 const TABS=[
   {key:"vocab",label:"단어",icon:ICONS.vocab},
@@ -2974,6 +3342,8 @@ if(!progress.reading)progress.reading={}; if(!progress.writing)progress.writing=
 let stats=store.read("opic_stats",{streak:0,lastDay:null,days:{}}); // 스트릭/일별 활동
 let drafts=store.read("opic_drafts",{});                  // 한→영 작문 답안 초안 {wid:text} — 밖에서 써도 보존
 let feedback=store.read("opic_feedback",{});              // AI 첨삭 결과 {wid:{corrected,comment,score,ts}}
+let planDone=store.read("opic_plan",{});                  // 21일 플랜 체크 {"d3:1":true}
+const savePlan=()=>store.write("opic_plan",planDone);
 const saveFav=()=>store.write("opic_favorites",[...favorites]);
 const saveMem=()=>store.write("opic_memorized",[...memorized]);
 const saveSrs=()=>store.write("opic_srs",srs);
@@ -3001,6 +3371,9 @@ const BADGES=[
   {id:"topicmaster",emoji:"📚",name:"주제 정복",desc:"한 주제 단어 전부 암기",check:()=>topicVocabMastered()},
   {id:"feedback5",emoji:"✍️",name:"첨삭 입문",desc:"AI 첨삭 5회",check:()=>Object.keys(feedback).length>=5},
   {id:"lv5",emoji:"🏆",name:"Lv.5 도달",desc:"레벨 5 달성",check:()=>xpInfo().lvl>=5},
+  {id:"speaker",emoji:"🎙",name:"입이 트임",desc:"녹음으로 답변 5회",check:()=>Object.keys(ui.recSec).length>=5},
+  {id:"roleplay10",emoji:"🎭",name:"롤플레이 10",desc:"롤플레이 답변 10개 작성",check:()=>Object.keys(drafts).filter(k=>k.indexOf("rp:")===0&&(drafts[k]||"").trim()).length>=10},
+  {id:"plan7",emoji:"📅",name:"플랜 일주일",desc:"21일 플랜 항목 25개 완료",check:()=>Object.keys(planDone).length>=25},
 ];
 let _bRaw=store.read("opic_badges",null);
 let badges=new Set(_bRaw||[]);
@@ -3018,13 +3391,338 @@ function checkBadges(){
 
 /* ---------------- 3) state / ui ---------------- */
 const saved=store.read("opic_settings",{});
-const state={tab:saved.tab||"dash",topic:saved.topic||"all",vocabPos:0,patternPos:0,readingPos:0,readingQPos:0,writingPos:0,comboStage:0,hideMeaning:false,revealed:false,reviewSeg:"srs",theme:saved.theme||"light",aiEndpoint:saved.aiEndpoint||"https://opic-tutor.kkwy1026.workers.dev/",dailyGoal:saved.dailyGoal||20,textSize:saved.textSize||"base",dashSections:saved.dashSections||{analysis:false,settings:false},weeklyGoal:saved.weeklyGoal||5};
+const state={tab:saved.tab||"dash",topic:saved.topic||"all",vocabPos:0,patternPos:0,readingPos:0,readingQPos:0,writingPos:0,comboStage:0,hideMeaning:false,revealed:false,reviewSeg:"srs",theme:saved.theme||"light",aiEndpoint:saved.aiEndpoint||"https://opic-tutor.kkwy1026.workers.dev/",dailyGoal:saved.dailyGoal||20,textSize:saved.textSize||"base",dashSections:saved.dashSections||{analysis:false,settings:false},weeklyGoal:saved.weeklyGoal||5,
+  ttsRate:saved.ttsRate||0.9,                       // 발음 듣기 재생 속도
+  examDate:saved.examDate||"",                      // 시험일 (YYYY-MM-DD)
+  targetGrade:saved.targetGrade||"AL",              // 목표 등급
+  planOpen:saved.planOpen||false};                  // 21일 플랜 전체 펼침 여부
 const ui={arrange:{},blank:{},translate:{},glossOpen:new Set(),fbLoading:{},fbError:{},celebrate:false,levelUp:0,comboMode:"step",
+  rpKind:"ask",                       // 롤플레이 유형 (ask/solve/exp)
+  rpModel:new Set(),                  // 모범답안을 펼친 롤플레이 id
+  speaking:"",                        // 지금 읽어주는 중인 텍스트의 키
+  recKey:"",                          // 지금 녹음 중인 답안 키
+  recAudio:{},                        // {key:blobURL} — 녹음 재생용(메모리)
+  recSec:{},                          // {key:초} — 마지막 녹음 길이
+  recNote:"",                         // 녹음 관련 안내/오류 메시지
   review:{active:false,finished:false,queue:[],total:0,revealed:false,count:0},
   quiz:{active:false,finished:false,items:[],pos:0,stage:"input",text:{},results:[],correct:0,lastCorrect:false}};
 // 저장된 작문 초안을 화면 상태로 복원(재실행해도 답안 유지)
 Object.keys(drafts).forEach(id=>{ui.translate[id]={text:drafts[id],show:false};});
-function saveSettings(){store.write("opic_settings",{tab:state.tab,topic:state.topic,theme:state.theme,aiEndpoint:state.aiEndpoint,dailyGoal:state.dailyGoal,textSize:state.textSize,dashSections:state.dashSections,weeklyGoal:state.weeklyGoal});}
+function saveSettings(){store.write("opic_settings",{tab:state.tab,topic:state.topic,theme:state.theme,aiEndpoint:state.aiEndpoint,dailyGoal:state.dailyGoal,textSize:state.textSize,dashSections:state.dashSections,weeklyGoal:state.weeklyGoal,ttsRate:state.ttsRate,examDate:state.examDate,targetGrade:state.targetGrade,planOpen:state.planOpen});}
+
+/* ================================================================
+   [Phase 3-A] 발음 듣기 (Web Speech API · speechSynthesis)
+   - 브라우저 내장 기능이라 별도 키·비용·네트워크가 필요 없습니다.
+   - 안드로이드 Chrome은 첫 재생 전에 사용자 탭이 한 번 있어야 소리가 납니다.
+   ================================================================ */
+const TTS={
+  ok:(typeof window!=="undefined" && "speechSynthesis" in window),
+  voice:null,
+  queue:[],          // 긴 지문은 문장 단위로 쪼개 순서대로 읽습니다
+  key:"",
+  /* 영어(가급적 미국) 음성을 고릅니다. 음성 목록은 비동기로 늦게 채워집니다. */
+  pickVoice(){
+    if(!this.ok)return null;
+    const vs=speechSynthesis.getVoices()||[];
+    if(!vs.length)return null;
+    const en=vs.filter(v=>/^en(-|_)/i.test(v.lang||""));
+    if(!en.length)return null;
+    this.voice =
+      en.find(v=>/en(-|_)US/i.test(v.lang)&&/google/i.test(v.name)) ||
+      en.find(v=>/en(-|_)US/i.test(v.lang)&&!/^Microsoft (David|Mark)/i.test(v.name)) ||
+      en.find(v=>/en(-|_)(GB|AU|CA)/i.test(v.lang)) || en[0];
+    return this.voice;
+  },
+  /* 문장 단위로 자릅니다. Chrome이 긴 문장에서 중간에 끊기는 문제를 피합니다. */
+  split(text){
+    return String(text)
+      .replace(/\s+/g," ")
+      .split(/(?<=[.!?])\s+/)
+      .reduce((acc,cur)=>{                    // 너무 짧은 조각은 앞 문장에 붙입니다
+        if(acc.length&&(acc[acc.length-1]+" "+cur).length<180&&cur.length<25)acc[acc.length-1]+=" "+cur;
+        else acc.push(cur);
+        return acc;
+      },[])
+      .filter(t=>t.trim());
+  },
+  stop(){
+    this.queue=[];this.key="";
+    if(this.ok){try{speechSynthesis.cancel();}catch(e){}}
+    if(ui.speaking){ui.speaking="";syncSpeakButtons();}
+  },
+  /* key: 어떤 버튼이 눌렸는지 구분(같은 버튼 다시 누르면 정지) */
+  speak(text,key){
+    if(!this.ok||!String(text||"").trim())return;
+    const same=(this.key===key&&ui.speaking===key);
+    this.stop();
+    if(same)return;                            // 재생 중이던 버튼을 다시 누르면 정지만
+    if(!this.voice)this.pickVoice();
+    this.key=key;ui.speaking=key;syncSpeakButtons();
+    this.queue=this.split(text);
+    this.next();
+  },
+  next(){
+    if(!this.queue.length){this.key="";ui.speaking="";syncSpeakButtons();return;}
+    const part=this.queue.shift();
+    const u=new SpeechSynthesisUtterance(part);
+    if(this.voice)u.voice=this.voice;
+    u.lang=(this.voice&&this.voice.lang)||"en-US";
+    u.rate=state.ttsRate;u.pitch=1;u.volume=1;
+    u.onend=()=>{ if(ui.speaking)this.next(); };
+    u.onerror=()=>{ this.queue=[];this.key="";ui.speaking="";syncSpeakButtons(); };
+    try{speechSynthesis.speak(u);}catch(e){this.stop();}
+  }
+};
+if(TTS.ok){
+  TTS.pickVoice();
+  speechSynthesis.onvoiceschanged=()=>TTS.pickVoice();   // 음성 목록이 늦게 로드되는 경우 대비
+  window.addEventListener("pagehide",()=>TTS.stop());
+}
+/* 재렌더 없이 🔊 버튼의 재생 상태만 갱신(재생 중 화면 깜빡임 방지) */
+function syncSpeakButtons(){
+  document.querySelectorAll(".spk").forEach(b=>{
+    const on=!!ui.speaking&&b.dataset.skey===ui.speaking;
+    b.classList.toggle("on",on);
+    b.innerHTML=on?ICON_STOPSQ:ICON_SPEAK;
+    b.setAttribute("aria-label",on?"읽기 정지":"영어 발음 듣기");
+  });
+}
+/* 어디서든 <button class="spk"> 하나로 발음 듣기를 붙입니다. */
+let _skSeq=0;
+function spk(text,opt){
+  if(!TTS.ok)return "";
+  const key=(opt&&opt.key)||("sk"+(++_skSeq));
+  const cls="spk"+((opt&&opt.lg)?" lg":"")+(ui.speaking===key?" on":"");
+  const icon=(ui.speaking===key)?ICON_STOPSQ:ICON_SPEAK;
+  return `<button class="${cls}" data-action="speak" data-skey="${esc(key)}" data-text="${esc(text)}" data-stop
+    aria-label="영어 발음 듣기" title="영어 발음 듣기">${icon}</button>`;
+}
+
+/* ================================================================
+   [Phase 3-B] 실전 말하기 — 마이크 녹음 + 답변 타이머 + 자동 받아쓰기
+   - MediaRecorder: 내 목소리를 녹음해 바로 다시 들어봅니다.
+   - SpeechRecognition: 말한 내용을 영어 텍스트로 옮겨 AI 첨삭까지 연결합니다.
+     (안드로이드/PC Chrome 지원. iOS Safari는 인식 미지원 → 녹음만 동작)
+   - 녹음 파일은 메모리에만 두며 저장하지 않습니다(용량 문제). 텍스트는 저장됩니다.
+   ================================================================ */
+const SR=(typeof window!=="undefined")&&(window.SpeechRecognition||window.webkitSpeechRecognition);
+const REC={
+  canRecord:(typeof navigator!=="undefined")&&!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)
+            &&(typeof MediaRecorder!=="undefined"),
+  canTranscribe:!!SR,
+  mr:null, stream:null, chunks:[], rec:null,
+  timer:null, startedAt:0, target:90,
+  finalText:"", interimText:"",
+  elapsed(){ return Math.floor((Date.now()-this.startedAt)/1000); },
+  /* 타이머·중간 받아쓰기는 전체 재렌더 없이 해당 DOM만 갱신합니다 */
+  tick(){
+    const t=document.getElementById("recTime");if(!t)return;
+    const e=this.elapsed(),over=e>=this.target;
+    t.textContent=fmtSec(e);t.classList.toggle("over",over);
+    const b=document.getElementById("recFill");
+    if(b){b.style.width=Math.min(100,Math.round(e/this.target*100))+"%";b.classList.toggle("ok",over);}
+  },
+  async start(key,target){
+    if(this.rec||this.mr){await this.stop();return;}
+    ui.recNote="";this.target=target||90;this.finalText="";this.interimText="";this.chunks=[];
+    if(!this.canRecord&&!this.canTranscribe){
+      ui.recNote="이 브라우저는 녹음·음성인식을 지원하지 않아요. 아래 칸에 직접 입력해 주세요.";renderAll();return;
+    }
+    if(!window.isSecureContext&&location.protocol!=="file:"){
+      ui.recNote="마이크는 https 주소에서만 쓸 수 있어요. GitHub Pages 주소로 접속해 주세요.";renderAll();return;
+    }
+    if(this.canRecord){
+      try{
+        this.stream=await navigator.mediaDevices.getUserMedia({audio:true});
+        const mr=new MediaRecorder(this.stream);
+        const stream=this.stream;
+        const mime=mr.mimeType||"audio/webm";
+        mr.ondataavailable=ev=>{ if(ev.data&&ev.data.size)this.chunks.push(ev.data); };
+        mr.onstop=()=>{
+          try{
+            if(this.chunks.length){
+              const blob=new Blob(this.chunks,{type:mr.mimeType||mime});
+              if(ui.recAudio[key])URL.revokeObjectURL(ui.recAudio[key]);
+              ui.recAudio[key]=URL.createObjectURL(blob);   // 메모리에만 보관(저장하지 않음)
+            }
+          }catch(e){}
+          this.chunks=[];
+          stream.getTracks().forEach(t=>{try{t.stop();}catch(e){}});  // 데이터를 다 모은 뒤 마이크 해제
+          renderAll();                                                 // 재생 플레이어를 그린다
+        };
+        this.mr=mr;
+        mr.start();
+      }catch(e){
+        this.mr=null;
+        ui.recNote="마이크 권한이 거부됐어요. 브라우저 주소창의 🔒 아이콘에서 마이크를 허용해 주세요.";
+        renderAll();return;
+      }
+    }
+    if(this.canTranscribe){
+      try{
+        const r=new SR();
+        r.lang="en-US";r.continuous=true;r.interimResults=true;
+        r.onresult=ev=>{
+          let interim="";
+          for(let i=ev.resultIndex;i<ev.results.length;i++){
+            const tr=ev.results[i][0].transcript;
+            if(ev.results[i].isFinal)this.finalText+=(this.finalText?" ":"")+tr.trim();
+            else interim+=tr;
+          }
+          this.interimText=interim;
+          const live=document.getElementById("recLive");
+          if(live)live.textContent=(this.finalText+" "+interim).trim()||"말하는 내용이 여기에 실시간으로 옮겨져요…";
+        };
+        r.onerror=ev=>{
+          if(ev.error==="not-allowed"||ev.error==="service-not-allowed")
+            ui.recNote="음성 인식 권한이 거부됐어요. 녹음만 진행할게요.";
+          else if(ev.error!=="no-speech"&&ev.error!=="aborted")
+            ui.recNote="음성 인식 오류("+ev.error+") — 녹음은 계속됩니다.";
+        };
+        r.onend=()=>{ if(this.rec===r&&ui.recKey){ try{r.start();}catch(e){} } };  // 무음으로 끊기면 재시작
+        r.start();this.rec=r;
+      }catch(e){ this.rec=null; }
+    }
+    ui.recKey=key;this.startedAt=Date.now();
+    if(!this.canTranscribe&&this.mr)ui.recNote="이 브라우저는 자동 받아쓰기를 지원하지 않아요. 녹음을 듣고 직접 옮겨 적어 주세요.";
+    renderAll();
+    this.timer=setInterval(()=>this.tick(),250);
+  },
+  async stop(){
+    const key=ui.recKey;
+    if(this.timer){clearInterval(this.timer);this.timer=null;}
+    const sec=key?this.elapsed():0;
+    if(this.rec){ const r=this.rec;this.rec=null;try{r.onend=null;r.stop();}catch(e){} }
+    let hadRecorder=false;
+    if(this.mr){                                  // onstop 안에서 Blob URL 생성 후 renderAll 한다
+      const mr=this.mr;this.mr=null;
+      try{ if(mr.state!=="inactive"){mr.stop();hadRecorder=true;} }catch(e){}
+    }
+    if(!hadRecorder&&this.stream){ this.stream.getTracks().forEach(t=>{try{t.stop();}catch(e){}}); }
+    this.stream=null;
+    ui.recKey="";
+    if(key){
+      ui.recSec[key]=sec;
+      const said=(this.finalText+" "+this.interimText).trim();
+      if(said){                                   // 받아쓴 내용을 답안 칸에 이어 붙입니다
+        const prev=((ui.translate[key]&&ui.translate[key].text)||drafts[key]||"").trim();
+        const merged=prev?prev+"\n"+said:said;
+        ui.translate[key]={text:merged,show:(ui.translate[key]||{}).show||false};
+        drafts[key]=merged;saveDrafts();
+      }
+      touchDay();stats.days[todayKey()].questions++;saveStats();addXP(10);checkBadges();
+    }
+    this.finalText="";this.interimText="";
+    if(!hadRecorder)renderAll();                  // 녹음기가 없으면(인식만 사용) 바로 갱신
+  }
+};
+const fmtSec=n=>Math.floor(n/60)+":"+String(n%60).padStart(2,"0");
+
+/* 녹음 UI 한 덩어리. key = 답안이 저장되는 키(콤보·롤플레이·모의 공용) */
+function recBox(key,target,guide){
+  const on=ui.recKey===key;
+  const audio=ui.recAudio[key],last=ui.recSec[key];
+  if(!REC.canRecord&&!REC.canTranscribe){
+    return `<div class="rec"><div class="rec-warn">🎙 이 브라우저는 녹음을 지원하지 않아요. 아래 칸에 직접 답안을 적어도 AI 첨삭은 그대로 받을 수 있어요.</div></div>`;
+  }
+  const note=ui.recNote?`<div class="rec-hint" style="color:var(--red)">${esc(ui.recNote)}</div>`:"";
+  const live=on&&REC.canTranscribe
+    ? `<div class="rec-live" id="recLive">말하는 내용이 여기에 실시간으로 옮겨져요…</div>`:"";
+  const player=(!on&&audio)
+    ? `<audio class="rec-audio" controls preload="metadata" src="${audio}"></audio>
+       <div class="rec-hint">↑ 내 발음을 다시 들어보세요. ${last!=null?`이번 답변 길이 <b>${fmtSec(last)}</b> / 목표 ${fmtSec(target)}`:""}${last!=null&&last<target?` — <b>${target-last}초</b> 더 말해보세요.`:last!=null?" — 목표 시간을 채웠어요 👍":""}</div>`:"";
+  return `<div class="rec">
+    <div class="rec-head">
+      <span class="rec-title">${on?`<span class="rec-dot"></span>녹음 중`:"🎙 실전처럼 말해보기"}</span>
+      <span class="rec-target">목표 ${fmtSec(target)}</span>
+    </div>
+    <div class="rec-main">
+      <button class="rec-btn ${on?"stop":""}" data-action="${on?"rec-stop":"rec-start"}" data-key="${esc(key)}" data-target="${target}"
+        aria-label="${on?"녹음 정지":"녹음 시작"}">${on?ICON_STOPSQ:ICON_MIC}</button>
+      <div class="rec-meta">
+        <div class="rec-time ${on?"":""}" id="recTime">${on?"0:00":(last!=null?fmtSec(last):"0:00")}</div>
+        <div class="rec-bar"><span id="recFill" style="width:${on?0:(last!=null?Math.min(100,Math.round(last/target*100)):0)}%" class="${(last!=null&&last>=target&&!on)?"ok":""}"></span></div>
+        <div class="rec-hint">${on?"끝나면 ■ 를 눌러 멈추세요.":esc(guide||"버튼을 누르고 영어로 답해보세요. 말한 내용이 아래 칸에 자동으로 옮겨집니다.")}</div>
+      </div>
+    </div>
+    ${live}${player}${note}
+  </div>`;
+}
+
+/* ================================================================
+   [Phase 3-C] D-day · 3주(21일) 실전 커리큘럼
+   - 시험일을 넣으면 남은 날짜에 맞춰 오늘 할 일이 자동으로 정해집니다.
+   - 목표 등급(AL/IH/IM)에 따라 하루 분량이 달라집니다.
+   ================================================================ */
+const GRADE_LOAD={AL:{vocab:20,pattern:10,label:"AL"},IH:{vocab:14,pattern:8,label:"IH"},IM:{vocab:10,pattern:5,label:"IM"}};
+const PLAN_TOPICS=[
+  ["selfintro","hobby"],["travel","work"],["fitness","restaurant"],["home","weather"],
+  ["recycling","tech"],["bank","fashion"],["geography"]
+];
+/* 21일 커리큘럼: 1주 인풋 축적 → 2주 문장 생산 → 3주 실전 말하기 */
+function buildPlan(){
+  const load=GRADE_LOAD[state.targetGrade]||GRADE_LOAD.AL;
+  const days=[];
+  for(let d=1;d<=21;d++){
+    const wk=Math.ceil(d/7), idx=(d-1)%7, pair=PLAN_TOPICS[idx];
+    const names=pair.map(topicLabel).join(" · ");
+    const last=idx===6;                                  // 각 주의 7일째 = 마무리·복습일
+    if(wk===1){
+      days.push({d,wk,phase:"1주차 · 인풋 축적",title:last?`${names} + 1주차 전체 복습`:`${names} — 단어와 표현을 눈과 귀에 붙이기`,
+        tasks:last
+          ? [{t:`단어 퀴즈로 1주차 점검`,tab:"review",seg:"quiz"},
+             {t:`복습 카드(SRS) 전부 비우기`,tab:"review",seg:"srs"},
+             {t:`${topicLabel(pair[0])} 독해 지문 2개 풀기`,tab:"reading",topic:pair[0]}]
+          : pair.flatMap(tp=>[
+              {t:`${topicLabel(tp)} 단어 ${load.vocab}개 — 🔊 발음까지 듣기`,tab:"vocab",topic:tp},
+              {t:`${topicLabel(tp)} 표현 ${load.pattern}개 익히기`,tab:"pattern",topic:tp}])
+            .concat([{t:`${topicLabel(pair[0])} 독해 지문 1개 풀기`,tab:"reading",topic:pair[0]}])});
+    }else if(wk===2){
+      days.push({d,wk,phase:"2주차 · 문장 생산",title:last?`${names} + 2주차 작문 총정리`:`${names} — 배운 표현으로 내 문장 만들기`,
+        tasks:last
+          ? [{t:`오답노트에 쌓인 문제 다시 풀기`,tab:"review",seg:"wrong"},
+             {t:`즐겨찾기한 표현으로 문장 만들어 보기`,tab:"review",seg:"fav"},
+             {t:`가장 약한 주제 콤보 3단계 완주`,tab:"combo"}]
+          : pair.flatMap(tp=>[
+              {t:`${topicLabel(tp)} 작문 8문제 (AI 첨삭 1회 이상)`,tab:"writing",topic:tp},
+              {t:`${topicLabel(tp)} 콤보 ①묘사 ②루틴 ③경험 — 🎙 녹음해서 답하기`,tab:"combo",topic:tp}])
+            .concat([{t:`복습 카드(SRS) 비우기`,tab:"review",seg:"srs"}])});
+    }else{
+      days.push({d,wk,phase:"3주차 · 실전 말하기",title:last?"최종 점검 — 시험 전날":`${names} — 롤플레이와 모의 인터뷰`,
+        tasks:last
+          ? [{t:`자기소개 콤보 한 번 더 — 첫 문항은 무조건 나옵니다`,tab:"combo",topic:"selfintro"},
+             {t:`가장 약한 주제 2개만 골라 모범답안 소리내어 읽기`,tab:"combo"},
+             {t:`오답노트 훑어보기 — 새 내용은 넣지 말 것`,tab:"review",seg:"wrong"},
+             {t:`일찍 자기 🛏 — 컨디션이 발음과 유창성을 좌우합니다`}]
+          : pair.flatMap(tp=>[
+              {t:`${topicLabel(tp)} 롤플레이 ①질문하기 ②문제해결 ③유사경험`,tab:"combo",topic:tp,mode:"roleplay"},
+              {t:`${topicLabel(tp)} 모의 인터뷰 1회 + 종합 첨삭`,tab:"combo",topic:tp,mode:"mock"}])
+            .concat([{t:`복습 카드(SRS) 비우기`,tab:"review",seg:"srs"}])});
+    }
+  }
+  return days;
+}
+function daysLeft(){
+  if(!state.examDate)return null;
+  const ex=new Date(state.examDate+"T00:00:00");
+  if(isNaN(ex))return null;
+  const now=new Date();now.setHours(0,0,0,0);
+  return Math.round((ex-now)/86400000);
+}
+/* 남은 날짜 → 오늘이 21일 플랜의 며칠째인지 (D-21 이상이면 1일차부터) */
+function planDayIndex(){
+  const left=daysLeft();
+  if(left==null)return null;
+  if(left>21)return 1;
+  if(left<1)return 21;
+  return 22-left;
+}
+const planKey=(d,i)=>"d"+d+":"+i;
+function planProgress(d,tasks){
+  const done=tasks.filter((t,i)=>planDone[planKey(d,i)]).length;
+  return {done,total:tasks.length,pct:tasks.length?Math.round(done/tasks.length*100):0};
+}
+
 function applyTheme(){
   document.documentElement.dataset.theme=state.theme==="dark"?"dark":"";
   const tc=document.getElementById("themeColor");if(tc)tc.setAttribute("content",state.theme==="dark"?"#13171C":"#1F6F6B");
@@ -3097,7 +3795,7 @@ function renderNav(){
   const due=dueFids().length;
   document.getElementById("nav").innerHTML=TABS.map(t=>{
     const on=state.tab===t.key?"on":"";
-    const badge=(t.key==="review"&&due>0)?`<span class="badge">${due}</span>`:"";
+    const badge=(t.key==="review"&&due>0)?`<span class="badge">${due>99?"99+":due}</span>`:"";
     return `<button class="nav-btn ${on}" data-action="tab" data-tab="${t.key}">${badge}${t.icon}<span>${t.label}</span></button>`;
   }).join("");
 }
@@ -3115,7 +3813,7 @@ function renderVocab(){
   const v=list[state.vocabPos],fid="vocab:"+v.id;
   const starOn=favorites.has(fid),memOn=memorized.has(fid);
   const veil=state.hideMeaning&&!state.revealed?"hidden":"";
-  const examples=v.examples.map(e=>`<div class="ex"><div class="ex-en en">${esc(e.en)}</div><div class="ex-ko">${esc(e.ko)}</div></div>`).join("");
+  const examples=v.examples.map((e,ei)=>`<div class="ex"><div class="ex-en en">${esc(e.en)}${spk(e.en,{key:"vx:"+v.id+":"+ei})}</div><div class="ex-ko">${esc(e.ko)}</div></div>`).join("");
   return `
   <div class="section-intro"><h2>단어 학습</h2><p>카드를 탭하면 뜻을 가리거나 확인할 수 있어요. ⭐ 즐겨찾기 · ✅ 암기완료</p></div>
   <div class="toolbar"><button class="btn ${state.hideMeaning?"":"soft"}" data-action="toggle-hide">${state.hideMeaning?"👁 뜻 보이기":"🙈 뜻 가리고 맞히기"}</button></div>
@@ -3128,7 +3826,7 @@ function renderVocab(){
           <button class="icon-btn check ${memOn?"on":""}" data-action="mem" data-fid="${fid}" data-stop>${ICON_CHECK}</button>
         </div>
       </div>
-      <div class="word en">${esc(v.word)}</div>
+      <div class="word en">${esc(v.word)}${spk(v.word,{key:"vw:"+v.id,lg:true})}</div>
       <div class="pron">/ ${esc(v.pron)} /</div>
       <div class="veil ${veil}"><div class="tap-hint">탭하여 뜻 확인</div><div class="meaning">${esc(v.meaning)}</div>${examples}</div>
     </div>
@@ -3155,13 +3853,13 @@ function renderPattern(){
   </div>
   <div class="card">
     <div class="pat-top">
-      <div><div class="pat-expr en">${esc(p.expression)}</div><div class="pat-mean">${esc(p.meaning)}</div></div>
+      <div><div class="pat-expr en">${esc(p.expression)}${spk(p.expression,{key:"pe:"+p.id})}</div><div class="pat-mean">${esc(p.meaning)}</div></div>
       <div class="pat-actions">
         <button class="icon-btn star ${on?"on":""}" data-action="fav" data-fid="${fid}">${on?ICON_STAR_FILL:ICON_STAR_LINE}</button>
         <button class="icon-btn check ${memOn?"on":""}" data-action="mem" data-fid="${fid}">${ICON_CHECK}</button>
       </div>
     </div>
-    <div class="pat-ex"><div class="ex-en en">${esc(p.example.en)}</div><div class="ex-ko">${esc(p.example.ko)}</div></div>
+    <div class="pat-ex"><div class="ex-en en">${esc(p.example.en)}${spk(p.example.en,{key:"px:"+p.id})}</div><div class="ex-ko">${esc(p.example.ko)}</div></div>
     <div class="pat-blank">✏️ 응용: <b>${esc(p.blank)}</b></div>
   </div>`;
 }
@@ -3224,7 +3922,7 @@ function renderReading(){
       <button class="icon-btn star ${on?"on":""}" data-action="fav" data-fid="${fid}">${on?ICON_STAR_FILL:ICON_STAR_LINE}</button>
     </div>
     <div class="passage en">${parsePassage(r)}</div>
-    <div class="read-tools"><button class="btn soft" data-action="toggle-ko" data-rid="${r.id}">${showKo?"한국어 해석 숨기기":"한국어 해석 보기"}</button></div>
+    <div class="read-tools"><button class="btn soft" data-action="toggle-ko" data-rid="${r.id}">${showKo?"한국어 해석 숨기기":"한국어 해석 보기"}</button>${TTS.ok?`<button class="btn soft" data-action="speak" data-skey="rp:${r.id}" data-text="${esc(r.passage_en.replace(/\[\[([^|\]]+)\|[^\]]+\]\]/g,"$1"))}">${ui.speaking==="rp:"+r.id?"⏹ 듣기 정지":"🔊 지문 듣기"}</button>`:""}</div>
     ${showKo?`<div class="passage-ko">${esc(r.passage_ko)}</div>`:""}
     <div class="q">
       <div class="q-text"><span class="qn">Q${qi+1} / ${r.questions.length}.</span><span class="en">${esc(qq.q)}</span></div>
@@ -3257,7 +3955,7 @@ function renderArrange(w){
   if(ui.arrange[w.id+"_done"]){
     const ok=normalize(userSentence)===normalize(w.answer_en);
     result=`<div class="w-result ${ok?"ok":"no"}">${ok?"✅ 정답이에요!":"❌ 다시 한 번 확인해 보세요."}</div>
-      <div class="model"><div class="lab">모범답안</div><div class="ans en">${esc(w.answer_en)}</div><div class="hint">💡 ${esc(w.hint)}</div></div>`;
+      <div class="model"><div class="lab">모범답안</div><div class="ans en">${esc(w.answer_en)}${spk(w.answer_en,{key:"wa:"+w.id})}</div><div class="hint">💡 ${esc(w.hint)}</div></div>`;
   }
   return `<div class="card">
     <div class="w-type">단어 배열 · ${topicLabel(w.topic)}</div>
@@ -3323,7 +4021,7 @@ function fbBoxHtml(fbKey){
 }
 function renderTranslate(w){
   const st=ui.translate[w.id]||{text:"",show:false};
-  const model=st.show?`<div class="model"><div class="lab">모범답안</div><div class="ans en">${esc(w.answer_en)}</div><div class="hint">💡 ${esc(w.hint)}</div></div>`:"";
+  const model=st.show?`<div class="model"><div class="lab">모범답안</div><div class="ans en">${esc(w.answer_en)}${spk(w.answer_en,{key:"wa:"+w.id})}</div><div class="hint">💡 ${esc(w.hint)}</div></div>`:"";
   const fb=feedback[w.id],loading=ui.fbLoading[w.id];
   const fbBtn=state.aiEndpoint
     ? `<button class="btn ghost" data-action="ai-feedback" data-id="${w.id}" ${loading?"disabled":""}>✨ ${fb?"다시 첨삭":"AI 첨삭 받기"}</button>`
@@ -3338,16 +4036,24 @@ function renderTranslate(w){
 }
 
 /* 말하기 콤보: 묘사 → 루틴 → 경험 한 단계씩 + AI 첨삭 */
+/* 답변 목표 시간(초) — OPIc 실전 기준. AL 목표는 더 길게 말해야 합니다. */
+const TALK_TARGET={describe:90,routine:90,experience:105,ask:60,solve:90,exp:105,mock:180};
+function talkTarget(kind){
+  const base=TALK_TARGET[kind]||90;
+  return state.targetGrade==="AL"?base:state.targetGrade==="IH"?Math.round(base*0.85):Math.round(base*0.7);
+}
 function renderCombo(){
-  const intro=`<div class="section-intro"><h2>말하기 콤보 연습</h2><p>OPIc 실전처럼 한 주제를 <b>묘사 → 루틴 → 경험</b> 3단계로 답하고 AI 첨삭을 받아요.</p></div>`;
+  const intro=`<div class="section-intro"><h2>말하기 콤보 연습</h2><p>실전처럼 <b>묘사 → 루틴 → 경험 → 롤플레이</b>를 🎙 녹음하며 답하고 AI 첨삭을 받아요.</p></div>`;
   const seg=`<div class="seg">
-    <button class="${ui.comboMode!=="mock"?"on":""}" data-action="combo-mode" data-mode="step">단계별 연습</button>
+    <button class="${ui.comboMode==="step"?"on":""}" data-action="combo-mode" data-mode="step">단계별</button>
+    <button class="${ui.comboMode==="roleplay"?"on":""}" data-action="combo-mode" data-mode="roleplay">롤플레이</button>
     <button class="${ui.comboMode==="mock"?"on":""}" data-action="combo-mode" data-mode="mock">모의 인터뷰</button>
   </div>`;
   if(state.topic==="all"||!COMBO[state.topic]){
     return intro+seg+`<div class="card done-screen"><div class="big">🎤</div><h3>주제를 하나 골라주세요</h3><p>위의 주제 버튼에서 원하는 주제를 선택하면 시작돼요.</p></div>`;
   }
   if(ui.comboMode==="mock") return intro+seg+renderComboMock();
+  if(ui.comboMode==="roleplay") return intro+seg+renderRoleplay();
   const c=COMBO[state.topic];
   const order=["describe","routine","experience"];
   const labels=[["①","묘사 Describe"],["②","루틴 Routine"],["③","경험 Experience"]];
@@ -3365,9 +4071,10 @@ function renderCombo(){
   <div class="combo-steps">${steps}</div>
   <div class="card">
     <div class="w-type">${labels[i][1]} · ${topicLabel(state.topic)}</div>
-    <div class="combo-q en">${esc(q.en)}</div>
+    <div class="combo-q en">${esc(q.en)}${spk(q.en,{key:"cq:"+comboId})}</div>
     <div class="combo-q-ko">${esc(q.ko)}</div>
     <div class="combo-guide">💡 ${guides[i]} · '문장' 탭의 이 주제 표현을 활용해 보세요.</div>
+    ${recBox(comboId,talkTarget(order[i]),"버튼을 누르고 실제 시험처럼 소리 내어 답해보세요. 말한 내용이 아래 칸에 자동으로 옮겨집니다.")}
     <textarea class="w-input en" data-tid="${comboId}" placeholder="영어로 답해보세요...">${esc(answer)}</textarea>
     <div class="w-actions">${fbBtn}</div>
     ${fbBoxHtml(comboId)}
@@ -3378,6 +4085,63 @@ function renderCombo(){
     </div>
   </div>`;
 }
+
+/* 🎭 롤플레이 — OPIc 11~13번 유형. 질문하기 → 문제 해결 → 유사 경험 */
+const RP_KINDS=[
+  {key:"ask",  emoji:"❓",label:"질문하기", guide:"주어진 상황에서 상대에게 <b>서너 가지를 실제로 물어보세요.</b> 인사 → 질문 3~4개 → 마무리 순서로 말하면 자연스러워요."},
+  {key:"solve",emoji:"🛠",label:"문제 해결", guide:"<b>상황 설명 → 왜 문제인지 → 원하는 해결책 2가지 제시</b> 순으로 말하세요. 정중하되 요구는 분명하게."},
+  {key:"exp",  emoji:"💬",label:"유사 경험", guide:"<b>언제 → 무슨 일이 → 어떻게 대처했고 → 무엇을 배웠는지</b> 4단 구조로 말하면 AL 답변이 됩니다."}
+];
+function renderRoleplay(){
+  const list=DATA.roleplay.filter(r=>r.topic===state.topic);
+  if(!list.length)return emptyMsg("이 주제의 롤플레이가 아직 없어요.");
+  const kind=RP_KINDS.find(k=>k.key===ui.rpKind)?ui.rpKind:"ask";
+  const r=list.find(x=>x.kind===kind)||list[0];
+  const meta=RP_KINDS.find(k=>k.key===r.kind)||RP_KINDS[0];
+  const rid="rp:"+r.id;
+  const answer=((ui.translate[rid]&&ui.translate[rid].text)||drafts[rid]||"");
+  const loading=ui.fbLoading[rid],fb=feedback[rid];
+  const showModel=ui.rpModel.has(r.id);
+  const kinds=RP_KINDS.map(k=>`<button class="${k.key===r.kind?"on":""}" data-action="rp-kind" data-kind="${k.key}"><span class="k-emoji">${k.emoji}</span>${k.label}</button>`).join("");
+  const fbBtn=state.aiEndpoint
+    ? `<button class="btn ghost" data-action="rp-feedback" data-id="${r.id}" ${loading?"disabled":""}>✨ ${fb?"다시 첨삭":"AI 첨삭 받기"}</button>`
+    : `<button class="btn ghost" data-action="rp-copy" data-id="${r.id}">📋 답안 복사(채팅 첨삭용)</button>`;
+  return `
+  <div class="rp-kinds">${kinds}</div>
+  <div class="card">
+    <div class="w-type">${meta.emoji} ${meta.label} · ${topicLabel(r.topic)}</div>
+    <div class="combo-q en">${esc(r.en)}${spk(r.en,{key:"rq:"+r.id})}</div>
+    <div class="combo-q-ko">${esc(r.ko)}</div>
+    <div class="combo-guide">💡 ${meta.guide}</div>
+    <div class="rp-keys">
+      <div class="lab">이 표현은 꼭 써보세요</div>
+      <ul>${r.keys.map((k,ki)=>`<li>${esc(k)}${spk(k,{key:"rk:"+r.id+":"+ki})}</li>`).join("")}</ul>
+    </div>
+    ${recBox(rid,talkTarget(r.kind),"실전처럼 소리 내어 답해보세요. 말한 내용이 아래 칸에 자동으로 옮겨집니다.")}
+    <textarea class="w-input en" data-tid="${rid}" placeholder="영어로 답해보세요...">${esc(answer)}</textarea>
+    <div class="w-actions">
+      <button class="btn" data-action="rp-model" data-id="${r.id}">${showModel?"모범답안 숨기기":"모범답안 보기"}</button>
+      ${fbBtn}
+    </div>
+    ${showModel?`<div class="rp-model">
+      <div class="lab">AL 수준 모범답안 ${spk(r.model_en,{key:"rm:"+r.id})}</div>
+      <div class="en">${esc(r.model_en)}</div>
+      <div class="ko">${esc(r.model_ko)}</div>
+    </div>`:""}
+    ${fbBoxHtml(rid)}
+  </div>
+  <p style="text-align:center;font-size:12px;color:var(--ink-faint);margin:14px 0 0;">
+    실전에서는 답변을 다시 들을 수 없어요. 먼저 <b>녹음부터</b> 하고, 그다음에 모범답안을 확인하세요.</p>`;
+}
+function requestRoleplayFeedback(id){
+  const r=DATA.roleplay.find(x=>x.id===id);if(!r)return;
+  const rid="rp:"+id;
+  const text=((ui.translate[rid]&&ui.translate[rid].text)||drafts[rid]||"").trim();
+  if(!text){alert("먼저 영어로 답변을 작성하거나 녹음해 주세요.");return;}
+  if(!state.aiEndpoint){state.tab="dash";state.dashSections.settings=true;saveSettings();renderAll();return;}
+  callFeedback(rid,r.ko+" / "+r.en,text,r.model_en);
+}
+
 /* 모의 인터뷰: 한 주제의 3질문을 연속으로 답하고 종합 첨삭 */
 function renderComboMock(){
   const c=COMBO[state.topic];
@@ -3386,8 +4150,9 @@ function renderComboMock(){
     const id="combo:"+state.topic+":"+i;
     const ans=((ui.translate[id]&&ui.translate[id].text)||drafts[id]||"");
     return `<div class="mock-q">
-      <div class="mock-q-label">${labels[i]} · ${esc(c[k].en)}</div>
+      <div class="mock-q-label">${labels[i]} · ${esc(c[k].en)}${spk(c[k].en,{key:"mq:"+id})}</div>
       <div class="mock-q-ko">${esc(c[k].ko)}</div>
+      ${recBox(id,talkTarget(order[i]),"이 질문에 실전처럼 답해보세요.")}
       <textarea class="w-input en" data-tid="${id}" placeholder="영어로 답해보세요...">${esc(ans)}</textarea>
     </div>`;
   }).join("");
@@ -3436,7 +4201,7 @@ function renderSrs(){
   const fid=r.queue[0],c=cardOf(fid);
   const doneRatio=r.total?Math.round((r.count/(r.total))*100):0;
   const back=r.revealed?`<div class="rev-back"><div class="rev-mean">${esc(c.mean)}</div>
-      <div class="rev-ex ex"><div class="ex-en en">${esc(c.ex.en)}</div><div class="ex-ko">${esc(c.ex.ko)}</div></div></div>
+      <div class="rev-ex ex"><div class="ex-en en">${esc(c.ex.en)}${spk(c.ex.en,{key:"sx:"+fid})}</div><div class="ex-ko">${esc(c.ex.ko)}</div></div></div>
       <div class="rev-rate"><button class="btn red" data-action="srs-rate" data-good="0">몰라요</button><button class="btn" data-action="srs-rate" data-good="1">알아요</button></div>`
     :`<div class="rev-rate"><button class="btn big" data-action="srs-reveal">뜻 보기</button></div>`;
   return `<div class="review-stage">
@@ -3444,7 +4209,7 @@ function renderSrs(){
     <div class="rev-bar"><span style="width:${doneRatio}%"></span></div>
     <div class="card rev-card">
       <div class="rev-kind">${c.kind} · ${topicLabel(c.topic)}</div>
-      <div class="rev-front ${c.mode==="pattern"?"small":""} en">${esc(c.front)}</div>
+      <div class="rev-front ${c.mode==="pattern"?"small":""} en">${esc(c.front)}${spk(c.front,{key:"sf:"+fid,lg:true})}</div>
       ${c.pron?`<div class="rev-pron">/ ${esc(c.pron)} /</div>`:""}
       ${back}
     </div>
@@ -3602,9 +4367,11 @@ function gradeEstimate(){
   const comprehension=qAns>0?Math.round(qCorrect/qAns*100):null;
   const fbScores=Object.values(feedback).map(f=>(f&&typeof f.score==="number")?f.score:null).filter(s=>s!=null);
   const production=fbScores.length?Math.round(fbScores.reduce((a,b)=>a+b,0)/fbScores.length):null;
-  const comboStages=Object.keys(COMBO).length*3;
-  const comboDone=Object.keys(drafts).filter(k=>k.indexOf("combo:")===0&&(drafts[k]||"").trim()).length;
-  const speaking=Math.round(Math.min(1,comboDone/Math.max(1,comboStages))*100);
+  // 말하기 신호 = 콤보 3단계 + 롤플레이 3유형을 얼마나 실제로 답해봤는지 (녹음하면 가산)
+  const comboStages=Object.keys(COMBO).length*3+DATA.roleplay.length;
+  const comboDone=Object.keys(drafts).filter(k=>(k.indexOf("combo:")===0||k.indexOf("rp:")===0)&&(drafts[k]||"").trim()).length;
+  const recDone=Object.keys(ui.recSec).length;
+  const speaking=Math.round(Math.min(1,(comboDone+recDone*0.5)/Math.max(1,comboStages))*100);
   const parts=[[coverage,0.30],[comprehension,0.20],[production,0.35],[speaking,0.15]];
   let sum=0,wsum=0; parts.forEach(([v,wt])=>{if(v!=null){sum+=v*wt;wsum+=wt;}});
   const score=wsum?Math.round(sum/wsum):0;
@@ -3619,7 +4386,8 @@ function topicMastery(){
     const rs=DATA.reading.filter(r=>r.topic===t.key);let rTotalQ=0,rAns=0;
     rs.forEach(r=>{rTotalQ+=r.questions.length;r.questions.forEach((q,i)=>{if(progress.reading[r.id+"-"+i]!=null)rAns++;});});
     const ws=DATA.writing.filter(w=>w.topic===t.key),wD=ws.filter(w=>progress.writing[w.id]).length;
-    const total=vs.length+ps.length+rTotalQ+ws.length,done=vM+pM+rAns+wD;
+    const rps=DATA.roleplay.filter(x=>x.topic===t.key),rpD=rps.filter(x=>(drafts["rp:"+x.id]||"").trim()).length;
+    const total=vs.length+ps.length+rTotalQ+ws.length+rps.length,done=vM+pM+rAns+wD+rpD;
     return {key:t.key,label:t.label,pct:total?Math.round(done/total*100):0};
   }).sort((a,b)=>a.pct-b.pct);
 }
@@ -3646,6 +4414,60 @@ function weekInfo(){
   const goal=state.weeklyGoal||5;
   return {week,activeDays,total,lastTotal,goal,met:activeDays>=goal};
 }
+
+/* 📅 D-day 카드 + 오늘의 21일 플랜 */
+function renderDday(){
+  const left=daysLeft();
+  if(left==null){
+    return `<div class="card dday-card">
+      <div class="big" style="font-size:34px">📅</div>
+      <h3 style="margin:8px 0 4px;font-size:16px;">시험일을 알려주세요</h3>
+      <p style="font-size:13px;color:var(--ink-soft);margin:0;line-height:1.7;">
+        날짜를 넣으면 남은 기간에 맞춰 <b>3주 실전 커리큘럼</b>이 자동으로 짜여요.</p>
+      <div class="dday-set">
+        <input type="date" id="examDateInput" value="" />
+        <button class="btn" data-action="save-exam">저장</button>
+      </div>
+    </div>`;
+  }
+  const urgent=left<=7;
+  const dIdx=planDayIndex(),plan=buildPlan();
+  const today=plan[Math.max(0,Math.min(20,dIdx-1))];
+  const label=left===0?"D-DAY":left<0?"시험일이 지났어요":"D-"+left;
+  const phase=left<0?"수고하셨어요! 결과를 기다리며 감각을 유지해요":left>21?`플랜은 D-21(${left-21}일 뒤)부터 시작돼요`:today.phase;
+  const pr=planProgress(today.d,today.tasks);
+  const tasks=today.tasks.map((t,i)=>{
+    const k=planKey(today.d,i),done=!!planDone[k];
+    const go=t.tab?`<button class="plan-go" data-action="plan-go" data-tab="${t.tab}" data-topic="${t.topic||""}" data-seg="${t.seg||""}" data-mode="${t.mode||""}">이동</button>`:"";
+    return `<div class="plan-task ${done?"done":""}">
+      <button class="plan-check ${done?"on":""}" data-action="plan-check" data-key="${k}" aria-label="완료 표시">${ICON_CHECK}</button>
+      <span class="plan-label">${t.t}</span>${go}
+    </div>`;
+  }).join("");
+  const all=state.planOpen?`<div class="plan-list">${plan.map(d=>{
+    const g=planProgress(d.d,d.tasks);
+    const cls=d.d===today.d?"today":(d.d<today.d?"past":"");
+    return `<div class="plan-row ${cls}"><span class="pd">Day ${d.d}</span><span class="pt">${esc(d.title)}</span><span class="pp">${g.done}/${g.total}</span></div>`;
+  }).join("")}</div>`:"";
+  return `<div class="card dday-card">
+    <div class="dday-num ${urgent?"urgent":""}">${label}</div>
+    <div class="dday-date">${esc(state.examDate)} 시험 · 목표 ${esc(state.targetGrade)}</div>
+    <div class="dday-phase">${esc(phase)}</div>
+  </div>
+  <div class="card plan-card">
+    <div class="plan-head">
+      <span class="plan-day">Day ${today.d} / 21 · 오늘의 플랜</span>
+      <span class="plan-count">${pr.done}/${pr.total}</span>
+    </div>
+    <div class="plan-title">${esc(today.title)}</div>
+    ${tasks}
+    <div class="plan-bar"><span class="${pr.pct===100?"done":""}" style="width:${pr.pct}%"></span></div>
+    <button class="dash-toggle" style="margin-top:12px" data-action="plan-open">
+      <span>🗓 21일 커리큘럼 전체 보기</span><span class="chev">${state.planOpen?"▾":"▸"}</span></button>
+    ${all}
+  </div>`;
+}
+
 function renderDash(){
   const vTotal=DATA.vocab.length, vMem=DATA.vocab.filter(v=>memorized.has("vocab:"+v.id)).length;
   const pTotal=DATA.patterns.length, pMem=DATA.patterns.filter(p=>memorized.has("pattern:"+p.id)).length;
@@ -3681,6 +4503,7 @@ function renderDash(){
   }
   return `
   <div class="section-intro"><h2>학습 대시보드</h2><p>오늘의 학습량과 진도를 한눈에 확인하세요.</p></div>
+  ${renderDday()}
   <div class="card xp-card">
     <div class="xp-top"><span class="xp-lv">Lv.${xpInfo().lvl}</span><span class="xp-num">${xpInfo().inLvl} / ${xpInfo().need} XP</span></div>
     <div class="xp-bar"><span style="width:${xpInfo().inLvl}%"></span></div>
@@ -3815,6 +4638,25 @@ function renderDash(){
     <p style="font-size:11.5px;color:var(--ink-faint);margin-top:6px;">${state.aiEndpoint?"✅ 첨삭 서버가 등록되어 있어요.":"미등록 — 등록 전에는 '답안 복사' 후 채팅으로 첨삭받을 수 있어요."}</p>
   </div>
   <div class="settings">
+    <div class="fav-group-title">시험일 · 목표 등급</div>
+    <p style="font-size:12.5px;color:var(--ink-soft);margin:0 0 8px;">시험일을 넣으면 남은 기간에 맞춰 21일 커리큘럼이 자동으로 배치돼요.</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;">
+      <input id="examDateInput" class="setting-input" type="date" value="${esc(state.examDate)}" style="flex:0 0 auto;" />
+      <button class="btn" data-action="save-exam">저장</button>
+    </div>
+    <div class="goal-opts" style="margin-top:10px;">
+      ${[["AL","AL"],["IH","IH"],["IM","IM2/3"]].map(([v,l])=>`<button class="${state.targetGrade===v?"on":""}" data-action="set-grade" data-g="${v}">${l}</button>`).join("")}
+    </div>
+    <p style="font-size:11.5px;color:var(--ink-faint);margin-top:6px;">목표 등급에 따라 하루 단어·표현 분량과 답변 목표 시간이 달라집니다.</p>
+  </div>
+  <div class="settings">
+    <div class="fav-group-title">발음 듣기 속도</div>
+    <p style="font-size:12.5px;color:var(--ink-soft);margin:0 0 8px;">🔊 버튼으로 영어를 들을 때의 속도예요. ${TTS.ok?"처음에는 0.75x로 따라 읽고, 익숙해지면 1x로 올려보세요.":"⚠️ 이 브라우저는 발음 듣기를 지원하지 않아요."}</p>
+    <div class="goal-opts">
+      ${[[0.75,"0.75x 느리게"],[0.9,"0.9x 보통"],[1,"1x 원어민 속도"]].map(([v,l])=>`<button class="${state.ttsRate===v?"on":""}" data-action="set-ttsrate" data-r="${v}">${l}</button>`).join("")}
+    </div>
+  </div>
+  <div class="settings">
     <div class="fav-group-title">오늘의 목표</div>
     <p style="font-size:12.5px;color:var(--ink-soft);margin:0 0 8px;">하루 학습량 목표(복습+문제 합). 작게 시작해 매일 달성하는 게 가장 효과적이에요.</p>
     <div class="goal-opts">
@@ -3908,8 +4750,62 @@ document.body.addEventListener("click",e=>{
   captureInputs();
   switch(a){
     case "theme": state.theme=state.theme==="dark"?"light":"dark";saveSettings();applyTheme();break;
-    case "tab": state.tab=el.dataset.tab;state.revealed=false;saveSettings();break;
-    case "topic": state.topic=el.dataset.topic;state.vocabPos=0;state.patternPos=0;state.writingPos=0;state.comboStage=0;state.revealed=false;ui.quiz.active=false;ui.quiz.finished=false;setReadingPos(0);saveSettings();break;
+
+    /* 🔊 발음 듣기 — 재렌더 없이 버튼 상태만 바꿔 재생 중 화면이 흔들리지 않게 합니다 */
+    case "speak":{
+      const key=el.dataset.skey||"", txt=el.dataset.text||"";
+      if(!TTS.ok){alert("이 브라우저는 발음 듣기를 지원하지 않아요.");return;}
+      TTS.speak(txt,key);
+      if(el.classList.contains("btn")){          // 독해 '지문 듣기'는 라벨이 바뀌므로 재렌더
+        el.textContent=ui.speaking===key?"⏹ 듣기 정지":"🔊 지문 듣기";
+      }
+      return;
+    }
+    case "set-ttsrate": state.ttsRate=parseFloat(el.dataset.r);saveSettings();TTS.stop();break;
+
+    /* 🎙 실전 말하기 — 녹음/정지는 비동기라 내부에서 다시 렌더합니다 */
+    case "rec-start": TTS.stop();REC.start(el.dataset.key,+el.dataset.target||90);return;
+    case "rec-stop":  REC.stop();return;
+
+    /* 🎭 롤플레이 */
+    case "rp-kind": ui.rpKind=el.dataset.kind;break;
+    case "rp-model":{const id=el.dataset.id;ui.rpModel.has(id)?ui.rpModel.delete(id):ui.rpModel.add(id);break;}
+    case "rp-feedback": requestRoleplayFeedback(el.dataset.id);return;
+    case "rp-copy":{
+      const r=DATA.roleplay.find(x=>x.id===el.dataset.id);if(!r)return;
+      const txt=((ui.translate["rp:"+r.id]&&ui.translate["rp:"+r.id].text)||drafts["rp:"+r.id]||"").trim();
+      if(!txt){alert("먼저 영어로 답변을 작성하거나 녹음해 주세요.");return;}
+      const payload=`다음 OPIc 롤플레이 답변을 첨삭해줘.\n[상황] ${r.en}\n[내 답변] ${txt}`;
+      try{navigator.clipboard.writeText(payload).then(()=>alert("답변이 복사됐어요. 채팅에 붙여넣어 첨삭을 요청하세요."),()=>alert(payload));}
+      catch(e){alert(payload);}
+      return;
+    }
+
+    /* 📅 D-day · 21일 플랜 */
+    case "save-exam":{
+      const box=el.closest(".settings")||el.closest(".dday-card")||document;
+      const inp=box.querySelector('input[type="date"]')||document.getElementById("examDateInput");
+      const v=inp?inp.value.trim():"";
+      if(v&&isNaN(new Date(v+"T00:00:00"))){alert("날짜를 올바르게 선택해 주세요.");return;}
+      state.examDate=v;saveSettings();
+      if(v){const l=daysLeft();showToast("📅","시험일이 등록됐어요",l>=0?`D-${l} · 오늘의 플랜을 확인해 보세요`:"지난 날짜예요");}
+      break;
+    }
+    case "set-grade": state.targetGrade=el.dataset.g;saveSettings();break;
+    case "plan-check":{const k=el.dataset.key;planDone[k]?delete planDone[k]:(planDone[k]=true,touchDay(),addXP(5));savePlan();checkBadges();break;}
+    case "plan-open": state.planOpen=!state.planOpen;saveSettings();break;
+    case "plan-go":{
+      const t=el.dataset.tab;if(!t)break;
+      state.tab=t;
+      if(el.dataset.topic)state.topic=el.dataset.topic;
+      if(el.dataset.seg)state.reviewSeg=el.dataset.seg;
+      if(el.dataset.mode)ui.comboMode=el.dataset.mode;
+      else if(t==="combo")ui.comboMode="step";
+      state.vocabPos=0;state.patternPos=0;state.writingPos=0;state.comboStage=0;state.revealed=false;
+      ui.quiz.active=false;ui.quiz.finished=false;setReadingPos(0);saveSettings();break;
+    }
+    case "tab": TTS.stop();if(ui.recKey)REC.stop();state.tab=el.dataset.tab;state.revealed=false;saveSettings();break;
+    case "topic": TTS.stop();if(ui.recKey)REC.stop();state.topic=el.dataset.topic;state.vocabPos=0;state.patternPos=0;state.writingPos=0;state.comboStage=0;state.revealed=false;ui.quiz.active=false;ui.quiz.finished=false;setReadingPos(0);saveSettings();break;
 
     /* 단어 */
     case "flip": state.revealed=!state.revealed;break;
@@ -4002,7 +4898,7 @@ document.body.addEventListener("click",e=>{
       catch(e){alert(payload);}
       return;
     }
-    case "combo-mode": ui.comboMode=el.dataset.mode==="mock"?"mock":"step";break;
+    case "combo-mode":{const m=el.dataset.mode;ui.comboMode=(m==="mock"||m==="roleplay")?m:"step";break;}
     case "mock-feedback": requestMockFeedback(state.topic);break;
     case "mock-copy":{
       const c=COMBO[state.topic];if(!c)return;
@@ -4078,6 +4974,9 @@ document.body.addEventListener("click",e=>{
       if(confirm("즐겨찾기·암기·복습·통계 기록을 모두 지울까요?")){
         store.clear();favorites=new Set();memorized=new Set();srs={};progress={reading:{},writing:{}};
         stats={streak:0,lastDay:null,days:{}};drafts={};feedback={};xp=0;saveXp();badges=new Set();saveBadges();
+        planDone={};savePlan();TTS.stop();REC.stop();
+        Object.values(ui.recAudio).forEach(u=>{try{URL.revokeObjectURL(u);}catch(e){}});
+        ui.recAudio={};ui.recSec={};ui.rpModel=new Set();ui.recNote="";
         ui.arrange={};ui.blank={};ui.translate={};ui.glossOpen=new Set();ui.fbLoading={};ui.fbError={};
         ui.review={active:false,finished:false,queue:[],total:0,revealed:false,count:0};
         ui.quiz={active:false,finished:false,items:[],pos:0,stage:"input",text:{},results:[],correct:0,lastCorrect:false};
