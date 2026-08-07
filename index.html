@@ -3344,6 +3344,8 @@ let drafts=store.read("opic_drafts",{});                  // 한→영 작문 �
 let feedback=store.read("opic_feedback",{});              // AI 첨삭 결과 {wid:{corrected,comment,score,ts}}
 let planDone=store.read("opic_plan",{});                  // 21일 플랜 체크 {"d3:1":true}
 const savePlan=()=>store.write("opic_plan",planDone);
+let recSec=store.read("opic_recsec",{});                  // 답변별 녹음 길이(초) {key:sec}
+const saveRecSec=()=>store.write("opic_recsec",recSec);
 const saveFav=()=>store.write("opic_favorites",[...favorites]);
 const saveMem=()=>store.write("opic_memorized",[...memorized]);
 const saveSrs=()=>store.write("opic_srs",srs);
@@ -3371,7 +3373,7 @@ const BADGES=[
   {id:"topicmaster",emoji:"📚",name:"주제 정복",desc:"한 주제 단어 전부 암기",check:()=>topicVocabMastered()},
   {id:"feedback5",emoji:"✍️",name:"첨삭 입문",desc:"AI 첨삭 5회",check:()=>Object.keys(feedback).length>=5},
   {id:"lv5",emoji:"🏆",name:"Lv.5 도달",desc:"레벨 5 달성",check:()=>xpInfo().lvl>=5},
-  {id:"speaker",emoji:"🎙",name:"입이 트임",desc:"녹음으로 답변 5회",check:()=>Object.keys(ui.recSec).length>=5},
+  {id:"speaker",emoji:"🎙",name:"입이 트임",desc:"녹음으로 답변 5회",check:()=>Object.keys(recSec).length>=5},
   {id:"roleplay10",emoji:"🎭",name:"롤플레이 10",desc:"롤플레이 답변 10개 작성",check:()=>Object.keys(drafts).filter(k=>k.indexOf("rp:")===0&&(drafts[k]||"").trim()).length>=10},
   {id:"plan7",emoji:"📅",name:"플랜 일주일",desc:"21일 플랜 항목 25개 완료",check:()=>Object.keys(planDone).length>=25},
 ];
@@ -3401,9 +3403,9 @@ const ui={arrange:{},blank:{},translate:{},glossOpen:new Set(),fbLoading:{},fbEr
   rpModel:new Set(),                  // 모범답안을 펼친 롤플레이 id
   speaking:"",                        // 지금 읽어주는 중인 텍스트의 키
   recKey:"",                          // 지금 녹음 중인 답안 키
-  recAudio:{},                        // {key:blobURL} — 녹음 재생용(메모리)
-  recSec:{},                          // {key:초} — 마지막 녹음 길이
-  recNote:"",                         // 녹음 관련 안내/오류 메시지
+  recAudio:{},                        // {key:blobURL} — 녹음 재생용(메모리, 새로고침 시 사라짐)
+
+  recNote:{key:"",msg:""},            // 녹음 안내/오류 — 해당 카드에만 표시
   review:{active:false,finished:false,queue:[],total:0,revealed:false,count:0},
   quiz:{active:false,finished:false,items:[],pos:0,stage:"input",text:{},results:[],correct:0,lastCorrect:false}};
 // 저장된 작문 초안을 화면 상태로 복원(재실행해도 답안 유지)
@@ -3506,15 +3508,22 @@ function spk(text,opt){
    - 녹음 파일은 메모리에만 두며 저장하지 않습니다(용량 문제). 텍스트는 저장됩니다.
    ================================================================ */
 const SR=(typeof window!=="undefined")&&(window.SpeechRecognition||window.webkitSpeechRecognition);
+const MIN_ANSWER_SEC=3;      // 실수로 눌렀다 뗀 녹음은 학습량으로 세지 않습니다
 const REC={
   canRecord:(typeof navigator!=="undefined")&&!!(navigator.mediaDevices&&navigator.mediaDevices.getUserMedia)
             &&(typeof MediaRecorder!=="undefined"),
   canTranscribe:!!SR,
   mr:null, stream:null, chunks:[], rec:null,
-  timer:null, startedAt:0, target:90,
+  timer:null, restartT:null, restarts:0,
+  startedAt:0, target:90,
+  starting:false,   // start() 진행 중 — 버튼을 연타해도 두 번 켜지지 않게 하는 동기 잠금
+  cancelled:false,  // 마이크 권한을 기다리는 사이에 정지를 누른 경우
   finalText:"", interimText:"",
-  elapsed(){ return Math.floor((Date.now()-this.startedAt)/1000); },
-  /* 타이머·중간 받아쓰기는 전체 재렌더 없이 해당 DOM만 갱신합니다 */
+  elapsed(){ return this.startedAt?Math.floor((Date.now()-this.startedAt)/1000):0; },
+  note(key,msg){ ui.recNote={key:key||"",msg:msg||""}; },
+  /* 타이머는 전체 재렌더 없이 해당 DOM만 갱신합니다.
+     recTime/recFill/recLive 아이디는 '지금 녹음 중인 카드'에만 붙습니다.
+     (모의 인터뷰처럼 녹음칸이 3개 그려질 때 아이디가 중복돼 엉뚱한 카드가 갱신되던 문제) */
   tick(){
     const t=document.getElementById("recTime");if(!t)return;
     const e=this.elapsed(),over=e>=this.target;
@@ -3522,87 +3531,134 @@ const REC={
     const b=document.getElementById("recFill");
     if(b){b.style.width=Math.min(100,Math.round(e/this.target*100))+"%";b.classList.toggle("ok",over);}
   },
-  async start(key,target){
-    if(this.rec||this.mr){await this.stop();return;}
-    ui.recNote="";this.target=target||90;this.finalText="";this.interimText="";this.chunks=[];
-    if(!this.canRecord&&!this.canTranscribe){
-      ui.recNote="이 브라우저는 녹음·음성인식을 지원하지 않아요. 아래 칸에 직접 입력해 주세요.";renderAll();return;
-    }
-    if(!window.isSecureContext&&location.protocol!=="file:"){
-      ui.recNote="마이크는 https 주소에서만 쓸 수 있어요. GitHub Pages 주소로 접속해 주세요.";renderAll();return;
-    }
-    if(this.canRecord){
-      try{
-        this.stream=await navigator.mediaDevices.getUserMedia({audio:true});
-        const mr=new MediaRecorder(this.stream);
-        const stream=this.stream;
-        const mime=mr.mimeType||"audio/webm";
-        mr.ondataavailable=ev=>{ if(ev.data&&ev.data.size)this.chunks.push(ev.data); };
-        mr.onstop=()=>{
-          try{
-            if(this.chunks.length){
-              const blob=new Blob(this.chunks,{type:mr.mimeType||mime});
-              if(ui.recAudio[key])URL.revokeObjectURL(ui.recAudio[key]);
-              ui.recAudio[key]=URL.createObjectURL(blob);   // 메모리에만 보관(저장하지 않음)
-            }
-          }catch(e){}
-          this.chunks=[];
-          stream.getTracks().forEach(t=>{try{t.stop();}catch(e){}});  // 데이터를 다 모은 뒤 마이크 해제
-          renderAll();                                                 // 재생 플레이어를 그린다
-        };
-        this.mr=mr;
-        mr.start();
-      }catch(e){
-        this.mr=null;
-        ui.recNote="마이크 권한이 거부됐어요. 브라우저 주소창의 🔒 아이콘에서 마이크를 허용해 주세요.";
-        renderAll();return;
-      }
-    }
-    if(this.canTranscribe){
-      try{
-        const r=new SR();
-        r.lang="en-US";r.continuous=true;r.interimResults=true;
-        r.onresult=ev=>{
-          let interim="";
-          for(let i=ev.resultIndex;i<ev.results.length;i++){
-            const tr=ev.results[i][0].transcript;
-            if(ev.results[i].isFinal)this.finalText+=(this.finalText?" ":"")+tr.trim();
-            else interim+=tr;
-          }
-          this.interimText=interim;
-          const live=document.getElementById("recLive");
-          if(live)live.textContent=(this.finalText+" "+interim).trim()||"말하는 내용이 여기에 실시간으로 옮겨져요…";
-        };
-        r.onerror=ev=>{
-          if(ev.error==="not-allowed"||ev.error==="service-not-allowed")
-            ui.recNote="음성 인식 권한이 거부됐어요. 녹음만 진행할게요.";
-          else if(ev.error!=="no-speech"&&ev.error!=="aborted")
-            ui.recNote="음성 인식 오류("+ev.error+") — 녹음은 계속됩니다.";
-        };
-        r.onend=()=>{ if(this.rec===r&&ui.recKey){ try{r.start();}catch(e){} } };  // 무음으로 끊기면 재시작
-        r.start();this.rec=r;
-      }catch(e){ this.rec=null; }
-    }
-    ui.recKey=key;this.startedAt=Date.now();
-    if(!this.canTranscribe&&this.mr)ui.recNote="이 브라우저는 자동 받아쓰기를 지원하지 않아요. 녹음을 듣고 직접 옮겨 적어 주세요.";
-    renderAll();
-    this.timer=setInterval(()=>this.tick(),250);
-  },
-  async stop(){
-    const key=ui.recKey;
+  clearTimers(){
     if(this.timer){clearInterval(this.timer);this.timer=null;}
+    if(this.restartT){clearTimeout(this.restartT);this.restartT=null;}
+  },
+  /* 음성 인식을 확실히 끝냅니다. 자동 재시작 직후에는 stop()이 무시될 수 있어
+     abort()까지 함께 불러 마이크가 계속 열려 있는 상태를 막습니다. */
+  killRecognition(){
+    const r=this.rec;if(!r)return;
+    this.rec=null;
+    try{r.onend=null;r.onresult=null;r.onerror=null;r.onstart=null;}catch(e){}
+    try{r.stop();}catch(e){}
+    try{r.abort();}catch(e){}
+  },
+  releaseStream(){
+    if(!this.stream)return;
+    try{this.stream.getTracks().forEach(t=>{try{t.stop();}catch(e){}});}catch(e){}
+    this.stream=null;
+  },
+  async start(key,target){
+    if(this.starting)return;                                   // 연타 방지(동기 잠금)
+    if(ui.recKey||this.rec||this.mr){this.stop();return;}       // 이미 녹음 중이면 정지로 동작
+    this.starting=true;this.cancelled=false;
+    try{
+      this.note("");this.target=target||90;this.restarts=0;
+      this.finalText="";this.interimText="";this.chunks=[];
+      this.clearTimers();
+      if(!this.canRecord&&!this.canTranscribe){
+        this.note(key,"이 브라우저는 녹음·음성인식을 지원하지 않아요. 아래 칸에 직접 입력해 주세요.");renderAll();return;
+      }
+      if(!window.isSecureContext){
+        this.note(key,"마이크는 https 주소에서만 쓸 수 있어요. GitHub Pages 주소로 접속해 주세요.");renderAll();return;
+      }
+      if(this.canRecord){
+        let stream;
+        try{ stream=await navigator.mediaDevices.getUserMedia({audio:true}); }
+        catch(e){
+          this.note(key,"마이크 권한이 거부됐어요. 주소창의 🔒 아이콘에서 마이크를 허용해 주세요.");
+          renderAll();return;
+        }
+        if(this.cancelled){                                    // 권한 대기 중에 정지를 누른 경우
+          stream.getTracks().forEach(t=>{try{t.stop();}catch(e){}});renderAll();return;
+        }
+        this.stream=stream;
+        try{
+          const mr=new MediaRecorder(stream);
+          const mime=mr.mimeType||"audio/webm";
+          mr.ondataavailable=ev=>{ if(ev.data&&ev.data.size)this.chunks.push(ev.data); };
+          mr.onstop=()=>{
+            try{
+              if(this.chunks.length){
+                const blob=new Blob(this.chunks,{type:mr.mimeType||mime});
+                if(ui.recAudio[key])URL.revokeObjectURL(ui.recAudio[key]);
+                ui.recAudio[key]=URL.createObjectURL(blob);     // 메모리에만 보관(저장하지 않음)
+              }
+            }catch(e){}
+            this.chunks=[];
+            stream.getTracks().forEach(t=>{try{t.stop();}catch(e){}});  // 데이터를 다 모은 뒤 마이크 해제
+            renderAll();                                                 // 재생 플레이어를 그린다
+          };
+          this.mr=mr;mr.start();
+        }catch(e){
+          this.mr=null;this.releaseStream();
+          this.note(key,"이 기기에서 녹음을 시작하지 못했어요. 아래 칸에 직접 입력해 주세요.");renderAll();return;
+        }
+      }
+      if(this.canTranscribe){
+        try{
+          const r=new SR();
+          r.lang="en-US";r.continuous=true;r.interimResults=true;
+          r.onresult=ev=>{
+            let interim="";
+            for(let i=ev.resultIndex;i<ev.results.length;i++){
+              const tr=ev.results[i][0].transcript;
+              if(ev.results[i].isFinal)this.finalText+=(this.finalText?" ":"")+tr.trim();
+              else interim+=tr;
+            }
+            this.interimText=interim;
+            const live=document.getElementById("recLive");
+            if(live)live.textContent=(this.finalText+" "+interim).trim()||"말하는 내용이 여기에 실시간으로 옮겨져요…";
+          };
+          r.onerror=ev=>{
+            const code=(ev&&ev.error)||"unknown";
+            if(code==="not-allowed"||code==="service-not-allowed"){
+              this.note(key,"음성 인식 권한이 없어 녹음만 진행할게요. 녹음을 듣고 직접 옮겨 적어 주세요.");
+              this.killRecognition();renderAll();
+            }else if(code!=="no-speech"&&code!=="aborted"){
+              this.note(key,"음성 인식 오류("+code+") — 녹음은 계속됩니다.");
+            }
+          };
+          /* 말을 잠깐 멈추면 인식이 저절로 끊깁니다. 녹음 중이면 이어 붙이되,
+             오류가 반복될 때 무한히 재시작하지 않도록 횟수를 제한합니다. */
+          r.onend=()=>{
+            if(this.rec!==r||ui.recKey!==key)return;            // 이미 정지된 경우
+            if(this.restarts>=40)return;
+            this.restarts++;
+            this.restartT=setTimeout(()=>{
+              this.restartT=null;
+              if(this.rec===r&&ui.recKey===key){try{r.start();}catch(e){}}
+            },250);
+          };
+          this.rec=r;r.start();
+        }catch(e){ this.rec=null; }
+      }
+      if(this.cancelled){this.stop();return;}
+      ui.recKey=key;this.startedAt=Date.now();
+      if(!this.canTranscribe&&this.mr)
+        this.note(key,"이 브라우저는 자동 받아쓰기를 지원하지 않아요. 녹음을 듣고 직접 옮겨 적어 주세요.");
+      renderAll();
+      this.timer=setInterval(()=>this.tick(),250);
+    }finally{ this.starting=false; }
+  },
+  /* 동기 함수로 두어 어떤 상황에서도 즉시 멈추게 하고, 여러 번 불러도 안전하게 만듭니다. */
+  stop(){
+    this.cancelled=true;                          // 권한 대기 중이면 start()가 스스로 취소합니다
+    const key=ui.recKey;
     const sec=key?this.elapsed():0;
-    if(this.rec){ const r=this.rec;this.rec=null;try{r.onend=null;r.stop();}catch(e){} }
+    this.clearTimers();
+    this.killRecognition();
     let hadRecorder=false;
-    if(this.mr){                                  // onstop 안에서 Blob URL 생성 후 renderAll 한다
+    if(this.mr){                                  // onstop에서 Blob URL을 만든 뒤 renderAll 합니다
       const mr=this.mr;this.mr=null;
       try{ if(mr.state!=="inactive"){mr.stop();hadRecorder=true;} }catch(e){}
     }
-    if(!hadRecorder&&this.stream){ this.stream.getTracks().forEach(t=>{try{t.stop();}catch(e){}}); }
-    this.stream=null;
-    ui.recKey="";
+    if(hadRecorder)this.stream=null;              // 마이크 트랙은 onstop에서 닫습니다
+    else this.releaseStream();
+    ui.recKey="";this.startedAt=0;
     if(key){
-      ui.recSec[key]=sec;
+      recSec[key]=sec;saveRecSec();
       const said=(this.finalText+" "+this.interimText).trim();
       if(said){                                   // 받아쓴 내용을 답안 칸에 이어 붙입니다
         const prev=((ui.translate[key]&&ui.translate[key].text)||drafts[key]||"").trim();
@@ -3610,27 +3666,37 @@ const REC={
         ui.translate[key]={text:merged,show:(ui.translate[key]||{}).show||false};
         drafts[key]=merged;saveDrafts();
       }
-      touchDay();stats.days[todayKey()].questions++;saveStats();addXP(10);checkBadges();
+      if(sec>=MIN_ANSWER_SEC){                    // 너무 짧은 녹음은 학습 기록에 넣지 않습니다
+        touchDay();stats.days[todayKey()].questions++;saveStats();addXP(10);checkBadges();
+      }
     }
     this.finalText="";this.interimText="";
-    if(!hadRecorder)renderAll();                  // 녹음기가 없으면(인식만 사용) 바로 갱신
+    if(!hadRecorder)renderAll();
   }
 };
+/* 앱을 벗어나거나 화면을 끄면 마이크와 소리를 확실히 끕니다.
+   (백그라운드에서 녹음이 계속되는 것을 막습니다) */
+document.addEventListener("visibilitychange",()=>{
+  if(document.visibilityState==="hidden"){ TTS.stop(); if(ui.recKey||REC.rec||REC.mr)REC.stop(); }
+});
+window.addEventListener("pagehide",()=>{ TTS.stop(); try{REC.stop();}catch(e){} });
+
 const fmtSec=n=>Math.floor(n/60)+":"+String(n%60).padStart(2,"0");
 
 /* 녹음 UI 한 덩어리. key = 답안이 저장되는 키(콤보·롤플레이·모의 공용) */
 function recBox(key,target,guide){
   const on=ui.recKey===key;
-  const audio=ui.recAudio[key],last=ui.recSec[key];
+  const audio=ui.recAudio[key],last=recSec[key];
   if(!REC.canRecord&&!REC.canTranscribe){
     return `<div class="rec"><div class="rec-warn">🎙 이 브라우저는 녹음을 지원하지 않아요. 아래 칸에 직접 답안을 적어도 AI 첨삭은 그대로 받을 수 있어요.</div></div>`;
   }
-  const note=ui.recNote?`<div class="rec-hint" style="color:var(--red)">${esc(ui.recNote)}</div>`:"";
+  const note=(ui.recNote&&ui.recNote.key===key&&ui.recNote.msg)
+    ? `<div class="rec-hint" style="color:var(--red)">${esc(ui.recNote.msg)}</div>`:"";
   const live=on&&REC.canTranscribe
     ? `<div class="rec-live" id="recLive">말하는 내용이 여기에 실시간으로 옮겨져요…</div>`:"";
   const player=(!on&&audio)
     ? `<audio class="rec-audio" controls preload="metadata" src="${audio}"></audio>
-       <div class="rec-hint">↑ 내 발음을 다시 들어보세요. ${last!=null?`이번 답변 길이 <b>${fmtSec(last)}</b> / 목표 ${fmtSec(target)}`:""}${last!=null&&last<target?` — <b>${target-last}초</b> 더 말해보세요.`:last!=null?" — 목표 시간을 채웠어요 👍":""}</div>`:"";
+       <div class="rec-hint">↑ 내 발음을 다시 들어보세요(새로고침하면 사라집니다). ${last!=null?`이번 답변 길이 <b>${fmtSec(last)}</b> / 목표 ${fmtSec(target)}`:""}${last!=null&&last<target?` — <b>${target-last}초</b> 더 말해보세요.`:last!=null?" — 목표 시간을 채웠어요 👍":""}</div>`:"";
   return `<div class="rec">
     <div class="rec-head">
       <span class="rec-title">${on?`<span class="rec-dot"></span>녹음 중`:"🎙 실전처럼 말해보기"}</span>
@@ -3640,8 +3706,8 @@ function recBox(key,target,guide){
       <button class="rec-btn ${on?"stop":""}" data-action="${on?"rec-stop":"rec-start"}" data-key="${esc(key)}" data-target="${target}"
         aria-label="${on?"녹음 정지":"녹음 시작"}">${on?ICON_STOPSQ:ICON_MIC}</button>
       <div class="rec-meta">
-        <div class="rec-time ${on?"":""}" id="recTime">${on?"0:00":(last!=null?fmtSec(last):"0:00")}</div>
-        <div class="rec-bar"><span id="recFill" style="width:${on?0:(last!=null?Math.min(100,Math.round(last/target*100)):0)}%" class="${(last!=null&&last>=target&&!on)?"ok":""}"></span></div>
+        <div class="rec-time" ${on?'id="recTime"':""}>${on?"0:00":(last!=null?fmtSec(last):"0:00")}</div>
+        <div class="rec-bar"><span ${on?'id="recFill"':""} style="width:${on?0:(last!=null?Math.min(100,Math.round(last/target*100)):0)}%" class="${(last!=null&&last>=target&&!on)?"ok":""}"></span></div>
         <div class="rec-hint">${on?"끝나면 ■ 를 눌러 멈추세요.":esc(guide||"버튼을 누르고 영어로 답해보세요. 말한 내용이 아래 칸에 자동으로 옮겨집니다.")}</div>
       </div>
     </div>
@@ -4370,7 +4436,7 @@ function gradeEstimate(){
   // 말하기 신호 = 콤보 3단계 + 롤플레이 3유형을 얼마나 실제로 답해봤는지 (녹음하면 가산)
   const comboStages=Object.keys(COMBO).length*3+DATA.roleplay.length;
   const comboDone=Object.keys(drafts).filter(k=>(k.indexOf("combo:")===0||k.indexOf("rp:")===0)&&(drafts[k]||"").trim()).length;
-  const recDone=Object.keys(ui.recSec).length;
+  const recDone=Object.keys(recSec).length;
   const speaking=Math.round(Math.min(1,(comboDone+recDone*0.5)/Math.max(1,comboStages))*100);
   const parts=[[coverage,0.30],[comprehension,0.20],[production,0.35],[speaking,0.15]];
   let sum=0,wsum=0; parts.forEach(([v,wt])=>{if(v!=null){sum+=v*wt;wsum+=wt;}});
@@ -4755,6 +4821,9 @@ document.body.addEventListener("click",e=>{
     case "speak":{
       const key=el.dataset.skey||"", txt=el.dataset.text||"";
       if(!TTS.ok){alert("이 브라우저는 발음 듣기를 지원하지 않아요.");return;}
+      if(ui.recKey){                       // 재생음이 마이크에 들어가 내 답변으로 받아써지는 것을 막습니다
+        showToast("🎙","녹음 중에는 들을 수 없어요","먼저 ■ 로 녹음을 멈춘 뒤 들어보세요");return;
+      }
       TTS.speak(txt,key);
       if(el.classList.contains("btn")){          // 독해 '지문 듣기'는 라벨이 바뀌므로 재렌더
         el.textContent=ui.speaking===key?"⏹ 듣기 정지":"🔊 지문 듣기";
@@ -4976,7 +5045,7 @@ document.body.addEventListener("click",e=>{
         stats={streak:0,lastDay:null,days:{}};drafts={};feedback={};xp=0;saveXp();badges=new Set();saveBadges();
         planDone={};savePlan();TTS.stop();REC.stop();
         Object.values(ui.recAudio).forEach(u=>{try{URL.revokeObjectURL(u);}catch(e){}});
-        ui.recAudio={};ui.recSec={};ui.rpModel=new Set();ui.recNote="";
+        ui.recAudio={};recSec={};saveRecSec();ui.rpModel=new Set();ui.recNote={key:"",msg:""};
         ui.arrange={};ui.blank={};ui.translate={};ui.glossOpen=new Set();ui.fbLoading={};ui.fbError={};
         ui.review={active:false,finished:false,queue:[],total:0,revealed:false,count:0};
         ui.quiz={active:false,finished:false,items:[],pos:0,stage:"input",text:{},results:[],correct:0,lastCorrect:false};
