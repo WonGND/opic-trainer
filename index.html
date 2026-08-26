@@ -494,6 +494,38 @@
   .plan-row .pt{flex:1;min-width:0;}
   .plan-row .pp{font-size:11px;color:var(--ink-faint);font-variant-numeric:tabular-nums;}
   .plan-row.past .pt{color:var(--ink-faint);}
+
+  /* 🔔 매일 알림 설정 */
+  .notif-box .notif-desc{font-size:12.5px;color:var(--ink-soft);margin:0 0 12px;line-height:1.7;}
+  .notif-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 0;
+    border-top:1px solid var(--line);}
+  .notif-row:first-of-type{border-top:none;}
+  .notif-row.disabled{opacity:.5;}
+  .notif-label{font-size:13.5px;font-weight:600;}
+  .notif-switch{position:relative;width:50px;height:30px;min-width:50px;border-radius:999px;
+    background:var(--line);border:none;padding:0;transition:background .18s;}
+  .notif-switch .knob{position:absolute;top:3px;left:3px;width:24px;height:24px;border-radius:50%;
+    background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.28);transition:transform .18s;}
+  .notif-switch.on{background:var(--teal);}
+  .notif-switch.on .knob{transform:translateX(20px);}
+  .notif-switch[aria-disabled="true"]{opacity:.45;}
+  .notif-time{padding:9px 12px;border:1px solid var(--line);border-radius:11px;background:var(--surface);
+    color:var(--ink);font-family:var(--font-en);font-size:15px;font-variant-numeric:tabular-nums;}
+  .notif-perm{font-size:12.5px;font-weight:700;padding:4px 11px;border-radius:999px;}
+  .notif-perm.ok{background:var(--green-soft);color:var(--green);}
+  .notif-perm.no{background:var(--red-soft);color:var(--red);}
+  .notif-perm.pending{background:var(--amber-soft);color:var(--amber);}
+  .notif-warn{margin-top:10px;padding:11px 13px;border-radius:11px;background:var(--amber-soft);
+    color:#7a5410;font-size:12.5px;line-height:1.7;display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
+  :root[data-theme="dark"] .notif-warn{color:var(--amber);}
+  .notif-hint{font-size:12px;color:var(--ink-soft);margin:10px 0 0;line-height:1.6;}
+  .notif-hint.bad{color:var(--red);font-weight:600;}
+  .notif-debug{margin-top:16px;padding-top:12px;border-top:1px dashed var(--line);}
+  .notif-debug-t{font-size:11px;font-weight:800;color:var(--ink-faint);letter-spacing:.4px;margin-bottom:8px;}
+  .notif-debug-btns{display:flex;gap:7px;flex-wrap:wrap;}
+  .notif-pending{margin-top:10px;padding:10px 12px;border-radius:10px;background:var(--bg);
+    border:1px solid var(--line);font-size:11px;line-height:1.5;overflow-x:auto;white-space:pre;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--ink-soft);max-height:220px;}
 </style>
 <script>
   // 화면이 그려지기 전에 저장된 테마를 미리 적용(다크→라이트 깜빡임 방지)
@@ -3392,12 +3424,29 @@ function checkBadges(){
 }
 
 /* ---------------- 3) state / ui ---------------- */
+/* "HH:MM" 파싱/보정 — 저장값이 손상돼도 앱이 죽지 않고 기본값으로 복구합니다. */
+const DEFAULT_NOTIFY_TIME="20:00";
+function parseHM(v){
+  const m=/^(\d{1,2}):(\d{2})$/.exec(String(v==null?"":v).trim());
+  if(!m)return null;
+  const h=+m[1],mi=+m[2];
+  if(!Number.isFinite(h)||!Number.isFinite(mi))return null;
+  if(h<0||h>23||mi<0||mi>59)return null;
+  return {h,m:mi};
+}
+function normalizeHM(v){
+  const t=parseHM(v);
+  return t?String(t.h).padStart(2,"0")+":"+String(t.m).padStart(2,"0"):DEFAULT_NOTIFY_TIME;
+}
+
 const saved=store.read("opic_settings",{});
 const state={tab:saved.tab||"dash",topic:saved.topic||"all",vocabPos:0,patternPos:0,readingPos:0,readingQPos:0,writingPos:0,comboStage:0,hideMeaning:false,revealed:false,reviewSeg:"srs",theme:saved.theme||"light",aiEndpoint:saved.aiEndpoint||"https://opic-tutor.kkwy1026.workers.dev/",dailyGoal:saved.dailyGoal||20,textSize:saved.textSize||"base",dashSections:saved.dashSections||{analysis:false,settings:false},weeklyGoal:saved.weeklyGoal||5,
   ttsRate:saved.ttsRate||0.9,                       // 발음 듣기 재생 속도
   examDate:saved.examDate||"",                      // 시험일 (YYYY-MM-DD)
   targetGrade:saved.targetGrade||"AL",              // 목표 등급
-  planOpen:saved.planOpen||false};                  // 21일 플랜 전체 펼침 여부
+  planOpen:saved.planOpen||false,                   // 21일 플랜 전체 펼침 여부
+  notifyOn:saved.notifyOn===true,                   // 매일 알림 on/off (네이티브 전용)
+  notifyTime:normalizeHM(saved.notifyTime)};        // "HH:MM" — 값이 깨져 있으면 기본값으로
 const ui={arrange:{},blank:{},translate:{},glossOpen:new Set(),fbLoading:{},fbError:{},celebrate:false,levelUp:0,comboMode:"step",
   rpKind:"ask",                       // 롤플레이 유형 (ask/solve/exp)
   rpModel:new Set(),                  // 모범답안을 펼친 롤플레이 id
@@ -3406,11 +3455,17 @@ const ui={arrange:{},blank:{},translate:{},glossOpen:new Set(),fbLoading:{},fbEr
   recAudio:{},                        // {key:blobURL} — 녹음 재생용(메모리, 새로고침 시 사라짐)
 
   recNote:{key:"",msg:""},            // 녹음 안내/오류 — 해당 카드에만 표시
+  notifPerm:"unknown",                // 알림 권한: granted/denied/prompt/unknown
+  notifMsg:"",                        // 알림 관련 안내·오류 문구
+  notifBusy:false,                    // 알림 API 호출 중
+  notifPending:null,                  // 디버그: getPending() 결과
+  notifBattery:true,                  // 배터리 최적화 예외 여부
+  notifExact:true,                    // 정확한 알람 예약 가능 여부
   review:{active:false,finished:false,queue:[],total:0,revealed:false,count:0},
   quiz:{active:false,finished:false,items:[],pos:0,stage:"input",text:{},results:[],correct:0,lastCorrect:false}};
 // 저장된 작문 초안을 화면 상태로 복원(재실행해도 답안 유지)
 Object.keys(drafts).forEach(id=>{ui.translate[id]={text:drafts[id],show:false};});
-function saveSettings(){store.write("opic_settings",{tab:state.tab,topic:state.topic,theme:state.theme,aiEndpoint:state.aiEndpoint,dailyGoal:state.dailyGoal,textSize:state.textSize,dashSections:state.dashSections,weeklyGoal:state.weeklyGoal,ttsRate:state.ttsRate,examDate:state.examDate,targetGrade:state.targetGrade,planOpen:state.planOpen});}
+function saveSettings(){store.write("opic_settings",{tab:state.tab,topic:state.topic,theme:state.theme,aiEndpoint:state.aiEndpoint,dailyGoal:state.dailyGoal,textSize:state.textSize,dashSections:state.dashSections,weeklyGoal:state.weeklyGoal,ttsRate:state.ttsRate,examDate:state.examDate,targetGrade:state.targetGrade,planOpen:state.planOpen,notifyOn:state.notifyOn,notifyTime:state.notifyTime});}
 
 /* ================================================================
    [Phase 3-A] 발음 듣기 (Web Speech API · speechSynthesis)
@@ -3713,6 +3768,157 @@ function recBox(key,target,guide){
     </div>
     ${live}${player}${note}
   </div>`;
+}
+
+
+/* ================================================================
+   [Phase 4] 매일 로컬 알림 (Capacitor LocalNotifications)
+   - 서버·푸시 없이 폰 안에서만 예약합니다. 앱이 꺼져 있어도 울립니다.
+   - 네이티브에서만 동작하며, 웹에서는 안내만 보여주고 어떤 API 도 부르지 않습니다.
+   ================================================================ */
+const NOTIF={
+  ID:1,
+  CHANNEL:"daily-study",
+  get plugin(){ return CAP("LocalNotifications"); },
+  get settings(){ return CAP("AppSettings"); },
+  available(){ return IS_NATIVE && !!this.plugin; },
+
+  /* Android 8+ 는 채널이 있어야 알림이 뜹니다. importance 4 = HIGH (소리 + 헤드업) */
+  async ensureChannel(){
+    const LN=this.plugin; if(!LN||!LN.createChannel)return;
+    try{
+      await LN.createChannel({
+        id:this.CHANNEL, name:"매일 학습 알림",
+        description:"정해진 시각에 오늘 학습을 알려줍니다.",
+        importance:4, visibility:1, vibration:true
+      });
+    }catch(e){ /* 채널 생성 실패는 치명적이지 않아 그대로 진행합니다 */ }
+  },
+
+  async refreshPerm(){
+    const LN=this.plugin; if(!LN)return "unknown";
+    try{
+      const r=await LN.checkPermissions();
+      ui.notifPerm=(r&&r.display)||"unknown";
+    }catch(e){ ui.notifPerm="unknown"; }
+    return ui.notifPerm;
+  },
+
+  /* 배터리 최적화·정확한 알람 상태 — 알림이 지연되는 원인을 미리 알려주기 위함 */
+  async refreshSystem(){
+    const S=this.settings; if(!S)return;
+    try{ const r=await S.isIgnoringBatteryOptimizations(); ui.notifBattery=!!(r&&r.value); }catch(e){}
+    try{ const r=await S.canScheduleExactAlarms(); ui.notifExact=!!(r&&r.value); }catch(e){}
+  },
+
+  /* 시각 변경 시에는 반드시 취소 후 재등록해야 중복 예약이 남지 않습니다. */
+  async cancel(){
+    const LN=this.plugin; if(!LN)return;
+    try{ await LN.cancel({notifications:[{id:this.ID}]}); }catch(e){}
+  },
+
+  async schedule(h,m){
+    const LN=this.plugin;
+    if(!LN)throw new Error("알림 플러그인을 찾을 수 없어요.");
+    await this.ensureChannel();
+    await this.cancel();
+    await LN.schedule({notifications:[{
+      id:this.ID,
+      title:"OPIc 15분",
+      body:"소리 내서. 녹음까지.",
+      /* on: 매일 이 시·분에 반복. 이미 지난 시각이면 다음 날로 잡힙니다.
+         allowWhileIdle: 절전(Doze) 상태에서도 깨워 정시에 울립니다. */
+      schedule:{ on:{hour:h,minute:m}, allowWhileIdle:true },
+      smallIcon:"ic_stat_notify",
+      channelId:this.CHANNEL
+    }]});
+  },
+
+  async pending(){
+    const LN=this.plugin; if(!LN)return [];
+    try{ const r=await LN.getPending(); return (r&&r.notifications)||[]; }
+    catch(e){ return []; }
+  },
+
+  /* 앱 시작 시 복원.
+     - 저장된 시각이 손상됐으면 기본값으로 되돌립니다.
+     - 사용자가 시스템 설정에서 알림을 꺼버린 경우를 감지해 토글을 내립니다.
+     - 항상 cancel 후 재등록하므로 재시작을 반복해도 예약은 항상 1개입니다. */
+  async restore(){
+    if(!this.available())return;
+    await this.refreshPerm();
+    await this.refreshSystem();
+    if(!state.notifyOn){ renderAll(); return; }
+    if(ui.notifPerm!=="granted"){
+      state.notifyOn=false; saveSettings();
+      ui.notifMsg="시스템 설정에서 알림이 꺼져 있어 '매일 알림'을 해제했어요. 다시 켜려면 토글을 눌러 주세요.";
+      renderAll(); return;
+    }
+    const fixed=normalizeHM(state.notifyTime);
+    if(fixed!==state.notifyTime){ state.notifyTime=fixed; saveSettings(); }
+    const t=parseHM(fixed);
+    try{ await this.schedule(t.h,t.m); ui.notifMsg=""; }
+    catch(e){
+      state.notifyOn=false; saveSettings();
+      ui.notifMsg="알림을 다시 예약하지 못했어요: "+((e&&e.message)||e);
+    }
+    renderAll();
+  }
+};
+
+/* 토글은 반드시 클릭 핸들러 안에서 권한을 요청해야 합니다.
+   (Android 13+ 는 POST_NOTIFICATIONS 런타임 권한이 없으면 알림이 아예 뜨지 않습니다.
+    매니페스트 선언만으로는 동작하지 않습니다.) */
+async function toggleDailyNotify(){
+  if(ui.notifBusy)return;
+  if(!NOTIF.available()){
+    ui.notifMsg="이 기능은 설치형 앱(APK)에서만 동작해요.";renderAll();return;
+  }
+  ui.notifBusy=true;ui.notifMsg="";renderAll();
+  try{
+    if(state.notifyOn){                       // ── 끄기
+      await NOTIF.cancel();
+      state.notifyOn=false;saveSettings();
+      ui.notifMsg="매일 알림을 껐어요.";
+    }else{                                    // ── 켜기: 권한 요청을 가장 먼저
+      let perm=null;
+      try{ perm=await NOTIF.plugin.requestPermissions(); }
+      catch(e){ perm=null; }
+      ui.notifPerm=(perm&&perm.display)||await NOTIF.refreshPerm();
+      if(ui.notifPerm!=="granted"){
+        state.notifyOn=false;saveSettings();   // 조용히 실패하지 않도록 토글을 되돌립니다
+        ui.notifMsg="알림 권한이 없어 켤 수 없어요. 아래 '앱 알림 설정 열기'에서 직접 허용한 뒤 다시 시도해 주세요.";
+      }else{
+        const t=parseHM(state.notifyTime)||parseHM(DEFAULT_NOTIFY_TIME);
+        state.notifyTime=normalizeHM(state.notifyTime);
+        await NOTIF.schedule(t.h,t.m);
+        state.notifyOn=true;saveSettings();
+        await NOTIF.refreshSystem();
+        ui.notifMsg="매일 "+state.notifyTime+"에 알려드릴게요.";
+        showToast("🔔","매일 알림 설정 완료",state.notifyTime+"에 울립니다");
+      }
+    }
+  }catch(e){
+    state.notifyOn=false;saveSettings();
+    ui.notifMsg="알림 설정에 실패했어요: "+((e&&e.message)||e);
+  }finally{
+    ui.notifBusy=false;ui.notifPending=null;renderAll();
+  }
+}
+
+async function changeNotifyTime(v){
+  const fixed=normalizeHM(v);
+  state.notifyTime=fixed;saveSettings();
+  if(!state.notifyOn||!NOTIF.available()){renderAll();return;}
+  ui.notifBusy=true;renderAll();
+  try{
+    const t=parseHM(fixed);
+    await NOTIF.schedule(t.h,t.m);            // 내부에서 cancel 후 재등록
+    ui.notifMsg="매일 "+fixed+"로 변경했어요.";
+  }catch(e){
+    state.notifyOn=false;saveSettings();
+    ui.notifMsg="시간 변경에 실패했어요: "+((e&&e.message)||e);
+  }finally{ ui.notifBusy=false;ui.notifPending=null;renderAll(); }
 }
 
 /* ================================================================
@@ -4491,6 +4697,71 @@ function weekInfo(){
   return {week,activeDays,total,lastTotal,goal,met:activeDays>=goal};
 }
 
+
+/* 🔔 매일 알림 설정 UI.
+   웹에서는 어떤 네이티브 API 도 부르지 않고 안내만 보여줍니다. */
+function renderNotifBox(){
+  const PERM_LABEL={granted:["허용됨","ok"],denied:["거부됨","no"],
+    prompt:["아직 묻지 않음","pending"],"prompt-with-rationale":["아직 묻지 않음","pending"],
+    unknown:["확인 전","pending"]};
+  if(!IS_NATIVE){
+    return `<div class="settings notif-box">
+      <div class="fav-group-title">🔔 매일 알림</div>
+      <p class="notif-desc">정해진 시각에 학습 알림을 받는 기능이에요.
+        <b>브라우저에서는 쓸 수 없고 설치형 앱(APK)에서만 동작합니다.</b>
+        지금은 안드로이드 시계 앱의 알람을 대신 쓰셔도 됩니다.</p>
+      <div class="notif-row disabled">
+        <span class="notif-label">매일 알림</span>
+        <span class="notif-switch" aria-disabled="true"><span class="knob"></span></span>
+      </div>
+      <p class="notif-hint">앱에서 열면 시각 선택과 권한 상태가 여기에 표시됩니다.</p>
+    </div>`;
+  }
+  const [permText,permCls]=PERM_LABEL[ui.notifPerm]||PERM_LABEL.unknown;
+  const on=state.notifyOn,busy=ui.notifBusy;
+  const denied=ui.notifPerm==="denied";
+  const warn=[];
+  if(on&&!ui.notifBattery)warn.push(`<div class="notif-warn">🔋 배터리 최적화가 켜져 있어 알림이 늦거나 안 올 수 있어요.
+    <button class="btn sm" data-action="notif-battery">배터리 설정 열기</button></div>`);
+  if(on&&!ui.notifExact)warn.push(`<div class="notif-warn">⏰ '알람 및 리마인더' 권한이 꺼져 있어 정시에 안 울릴 수 있어요.
+    <button class="btn sm" data-action="notif-exact">알람 권한 열기</button></div>`);
+  const pending=ui.notifPending==null?"":`<pre class="notif-pending">${esc(JSON.stringify(ui.notifPending,null,1))}</pre>`;
+  return `<div class="settings notif-box">
+    <div class="fav-group-title">🔔 매일 알림</div>
+    <p class="notif-desc">정해진 시각에 폰이 알려줍니다. 서버 없이 폰 안에서만 예약되며, 앱을 꺼두어도 울려요.</p>
+    <div class="notif-row ${busy?"disabled":""}">
+      <span class="notif-label">매일 알림</span>
+      <button class="notif-switch ${on?"on":""}" data-action="notif-toggle" ${busy?"disabled":""}
+        role="switch" aria-checked="${on?"true":"false"}" aria-label="매일 알림 켜기/끄기"><span class="knob"></span></button>
+    </div>
+    <div class="notif-row">
+      <span class="notif-label">알림 시각</span>
+      <input class="notif-time" type="time" value="${esc(state.notifyTime)}" data-action="notif-time"
+        ${busy?"disabled":""} aria-label="알림 시각" />
+    </div>
+    <div class="notif-row">
+      <span class="notif-label">알림 권한</span>
+      <span class="notif-perm ${permCls}">${permText}</span>
+    </div>
+    ${denied?`<div class="notif-warn">권한이 거부돼 있어요. 시스템 설정에서 직접 허용해야 알림이 뜹니다.
+      <button class="btn sm" data-action="notif-settings">앱 알림 설정 열기</button></div>`:""}
+    ${warn.join("")}
+    ${ui.notifMsg?`<p class="notif-hint ${/실패|없어|거부/.test(ui.notifMsg)?"bad":""}">${esc(ui.notifMsg)}</p>`:""}
+    ${busy?`<p class="notif-hint">처리 중…</p>`:""}
+    <!-- ▼▼▼ 개발용 디버그 도구 — 배포 전 이 블록만 지우면 됩니다 (README 참고) ▼▼▼ -->
+    <div class="notif-debug">
+      <div class="notif-debug-t">개발용 도구</div>
+      <div class="notif-debug-btns">
+        <button class="btn sm" data-action="notif-test">10초 뒤 테스트 알림</button>
+        <button class="btn sm" data-action="notif-pending">예약 목록 보기</button>
+        <button class="btn sm" data-action="notif-cancel-all">모든 알림 취소</button>
+      </div>
+      ${pending}
+    </div>
+    <!-- ▲▲▲ 개발용 디버그 도구 끝 ▲▲▲ -->
+  </div>`;
+}
+
 /* 📅 D-day 카드 + 오늘의 21일 플랜 */
 function renderDday(){
   const left=daysLeft();
@@ -4713,6 +4984,7 @@ function renderDash(){
     </div>
     <p style="font-size:11.5px;color:var(--ink-faint);margin-top:6px;">${state.aiEndpoint?"✅ 첨삭 서버가 등록되어 있어요.":"미등록 — 등록 전에는 '답안 복사' 후 채팅으로 첨삭받을 수 있어요."}</p>
   </div>
+  ${renderNotifBox()}
   <div class="settings">
     <div class="fav-group-title">시험일 · 목표 등급</div>
     <p style="font-size:12.5px;color:var(--ink-soft);margin:0 0 8px;">시험일을 넣으면 남은 기간에 맞춰 21일 커리큘럼이 자동으로 배치돼요.</p>
@@ -4871,6 +5143,65 @@ document.body.addEventListener("click",e=>{
       break;
     }
     case "set-grade": state.targetGrade=el.dataset.g;saveSettings();break;
+
+    /* 🔔 매일 알림 — 모두 비동기라 내부에서 다시 렌더합니다 */
+    case "notif-toggle": toggleDailyNotify();return;
+    case "notif-settings":{
+      const S=NOTIF.settings;
+      if(S&&S.openNotificationSettings)S.openNotificationSettings().catch(()=>{});
+      return;
+    }
+    case "notif-battery":{
+      const S=NOTIF.settings;
+      if(S&&S.openBatterySettings)S.openBatterySettings().catch(()=>{});
+      return;
+    }
+    case "notif-exact":{
+      const S=NOTIF.settings;
+      if(S&&S.openExactAlarmSettings)S.openExactAlarmSettings().catch(()=>{});
+      return;
+    }
+    /* --- 개발용 디버그 (배포 시 제거 가능) --- */
+    case "notif-test":{
+      (async()=>{
+        if(!NOTIF.available()){ui.notifMsg="앱에서만 동작해요.";renderAll();return;}
+        try{
+          const p=await NOTIF.plugin.requestPermissions();
+          ui.notifPerm=(p&&p.display)||ui.notifPerm;
+          if(ui.notifPerm!=="granted"){ui.notifMsg="알림 권한이 없어 테스트할 수 없어요.";renderAll();return;}
+          await NOTIF.ensureChannel();
+          await NOTIF.plugin.schedule({notifications:[{
+            id:9001,title:"테스트 알림",body:"10초 뒤 알림이 정상 동작합니다.",
+            schedule:{at:new Date(Date.now()+10000),allowWhileIdle:true},
+            smallIcon:"ic_stat_notify",channelId:NOTIF.CHANNEL}]});
+          ui.notifMsg="10초 뒤에 알림이 뜹니다. 앱을 나가 있어도 됩니다.";
+        }catch(e){ ui.notifMsg="테스트 알림 실패: "+((e&&e.message)||e); }
+        renderAll();
+      })();
+      return;
+    }
+    case "notif-pending":{
+      (async()=>{
+        if(!NOTIF.available()){ui.notifMsg="앱에서만 동작해요.";renderAll();return;}
+        ui.notifPending=await NOTIF.pending();
+        ui.notifMsg="예약 "+ui.notifPending.length+"건";
+        renderAll();
+      })();
+      return;
+    }
+    case "notif-cancel-all":{
+      (async()=>{
+        if(!NOTIF.available()){ui.notifMsg="앱에서만 동작해요.";renderAll();return;}
+        try{
+          const list=await NOTIF.pending();
+          if(list.length)await NOTIF.plugin.cancel({notifications:list.map(n=>({id:n.id}))});
+          state.notifyOn=false;saveSettings();
+          ui.notifPending=[];ui.notifMsg="예약된 알림을 모두 취소했어요.";
+        }catch(e){ ui.notifMsg="취소 실패: "+((e&&e.message)||e); }
+        renderAll();
+      })();
+      return;
+    }
     case "plan-check":{const k=el.dataset.key;planDone[k]?delete planDone[k]:(planDone[k]=true,touchDay(),addXP(5));savePlan();checkBadges();break;}
     case "plan-open": state.planOpen=!state.planOpen;saveSettings();break;
     case "plan-go":{
@@ -5066,6 +5397,10 @@ document.body.addEventListener("click",e=>{
   }
   renderAll();
 });
+document.body.addEventListener("change",e=>{
+  const el=e.target.closest('[data-action="notif-time"]');
+  if(el)changeNotifyTime(el.value);
+});
 document.body.addEventListener("input",e=>{
   if(e.target.classList.contains("w-input")){
     const id=e.target.getAttribute("data-tid");
@@ -5115,6 +5450,22 @@ if(IS_NATIVE){
   }
 }
 renderAll();
+
+/* 네이티브: 저장된 알림 설정을 복원합니다.
+   - 항상 cancel 후 재등록하므로 앱을 여러 번 켜도 예약은 1개만 남습니다.
+   - 시스템 설정에서 알림을 꺼버린 경우를 감지해 토글을 되돌립니다. */
+if(IS_NATIVE){
+  NOTIF.restore().catch(()=>{});
+  const App=CAP("App");
+  if(App&&App.addListener){
+    /* 설정 화면에 다녀오면 권한이 바뀌었을 수 있어 앱 복귀 시 다시 확인합니다. */
+    App.addListener("appStateChange",st=>{
+      if(st&&st.isActive){
+        NOTIF.refreshPerm().then(()=>NOTIF.refreshSystem()).then(()=>renderAll()).catch(()=>{});
+      }
+    }).catch(()=>{});
+  }
+}
 </script>
 </body>
 </html>
