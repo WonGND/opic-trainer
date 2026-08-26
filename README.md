@@ -91,6 +91,24 @@ adb install -r android/app/build/outputs/apk/debug/app-debug.apk
 
 > 첫 Gradle 빌드는 의존성을 받느라 **10~20분** 걸릴 수 있습니다. 이후에는 1~2분입니다.
 
+> **윈도우 사용자:** `npm run build:debug` 가 알아서 `gradlew.bat` 을 실행합니다.
+> 직접 Gradle 을 부를 때만 폴더 차이를 신경 쓰면 됩니다
+> (`cd android` 후 윈도우는 `.\gradlew.bat`, macOS·리눅스는 `./gradlew`).
+
+> **`ANDROID_HOME` 을 따로 설정하기 번거롭다면**, Android Studio 로 `android` 폴더를
+> 한 번 열어보세요. `android/local.properties` 에 SDK 경로가 자동으로 기록되어
+> 이후 터미널 빌드도 그대로 동작합니다.
+
+### 터미널이 어렵다면 — Android Studio 버튼으로 빌드
+
+`npm install` 과 `npm run sync` 까지만 터미널에서 하고(이 둘은 반드시 필요합니다),
+그다음은 GUI 로 해도 됩니다.
+
+1. Android Studio → **Open** → 이 저장소의 **`android` 폴더** 선택
+2. 오른쪽 아래 진행바가 멈출 때까지 대기 (Gradle 동기화 + 부족한 SDK 자동 설치)
+3. 상단 메뉴 **Build → Build Bundle(s) / APK(s) → Build APK(s)**
+4. 완료 팝업의 **locate** 를 누르면 APK 가 있는 폴더가 열립니다
+
 ### 웹 코드를 고친 뒤 앱에 반영
 
 `index.html` 을 수정했다면:

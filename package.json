@@ -6,8 +6,9 @@
   "scripts": {
     "sync:web": "node scripts/sync-web.mjs",
     "sync": "npm run sync:web && npx cap sync android",
-    "build:debug": "npm run sync && cd android && ./gradlew assembleDebug",
-    "build:release": "npm run sync && cd android && ./gradlew assembleRelease"
+    "build:debug": "npm run sync && node scripts/gradle.mjs assembleDebug",
+    "build:release": "npm run sync && node scripts/gradle.mjs assembleRelease",
+    "clean": "node scripts/gradle.mjs clean"
   },
   "dependencies": {
     "@capacitor/android": "^8.5.0",
