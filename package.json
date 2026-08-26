@@ -1,0 +1,23 @@
+{
+  "name": "opic-trainer",
+  "version": "1.0.0",
+  "private": true,
+  "description": "OPIc 영어 재료 창고 — PWA + Capacitor Android 셸",
+  "scripts": {
+    "sync:web": "node scripts/sync-web.mjs",
+    "sync": "npm run sync:web && npx cap sync android",
+    "build:debug": "npm run sync && cd android && ./gradlew assembleDebug",
+    "build:release": "npm run sync && cd android && ./gradlew assembleRelease"
+  },
+  "dependencies": {
+    "@capacitor/android": "^8.5.0",
+    "@capacitor/app": "^8.1.1",
+    "@capacitor/core": "^8.5.0",
+    "@capacitor/local-notifications": "^8.3.1"
+  },
+  "devDependencies": {
+    "@capacitor/cli": "^8.5.0",
+    "typescript": "^7.0.2"
+  },
+  "type": "module"
+}

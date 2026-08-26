@@ -1,0 +1,24 @@
+# 의존성
+node_modules/
+
+# Capacitor 가 생성하는 웹 자산 스테이징 디렉터리 (npm run sync:web 으로 재생성)
+www/
+
+# Android 빌드 산출물
+android/build/
+android/app/build/
+android/.gradle/
+android/captures/
+android/local.properties
+android/app/release/
+android/app/debug/
+.gradle/
+
+# 서명 키 — 절대 커밋하지 않습니다
+*.keystore
+*.jks
+keystore.properties
+
+# 기타
+.DS_Store
+*.log
