@@ -515,6 +515,7 @@
   .notif-perm.ok{background:var(--green-soft);color:var(--green);}
   .notif-perm.no{background:var(--red-soft);color:var(--red);}
   .notif-perm.pending{background:var(--amber-soft);color:var(--amber);}
+  .notif-next{font-size:12.5px;font-weight:700;color:var(--teal);font-variant-numeric:tabular-nums;}
   .notif-warn{margin-top:10px;padding:11px 13px;border-radius:11px;background:var(--amber-soft);
     color:#7a5410;font-size:12.5px;line-height:1.7;display:flex;flex-wrap:wrap;gap:8px;align-items:center;}
   :root[data-theme="dark"] .notif-warn{color:var(--amber);}
@@ -3866,6 +3867,27 @@ const NOTIF={
   }
 };
 
+/* 다음 알림이 언제인지 계산합니다.
+   - 오늘 그 시각이 이미 지났으면 내일로 넘어갑니다(오늘 즉시 울리지 않음).
+   - 00:05 처럼 자정을 넘기는 시각도 같은 규칙으로 처리됩니다.
+   - 로컬 시계(벽시계) 기준이라 타임존·서머타임이 바뀌어도 "매일 그 시각"이 유지됩니다.
+   실제 예약은 OS 가 하며, 이 값은 사용자가 눈으로 확인하기 위한 표시입니다. */
+function nextNotifyAt(h,m,from){
+  const now=from?new Date(from):new Date();
+  const t=new Date(now.getFullYear(),now.getMonth(),now.getDate(),h,m,0,0);
+  if(t.getTime()<=now.getTime())t.setDate(t.getDate()+1);
+  return t;
+}
+function nextNotifyLabel(){
+  const t=parseHM(state.notifyTime);if(!t)return "";
+  const at=nextNotifyAt(t.h,t.m);
+  const today=at.toDateString()===new Date().toDateString();
+  const hh=String(at.getHours()).padStart(2,"0"),mm=String(at.getMinutes()).padStart(2,"0");
+  const mins=Math.max(0,Math.round((at.getTime()-Date.now())/60000));
+  const rel=mins<60?mins+"분 뒤":mins<1440?Math.round(mins/60)+"시간 뒤":"하루 뒤";
+  return (today?"오늘":"내일")+" "+hh+":"+mm+" · "+rel;
+}
+
 /* 토글은 반드시 클릭 핸들러 안에서 권한을 요청해야 합니다.
    (Android 13+ 는 POST_NOTIFICATIONS 런타임 권한이 없으면 알림이 아예 뜨지 않습니다.
     매니페스트 선언만으로는 동작하지 않습니다.) */
@@ -4743,6 +4765,8 @@ function renderNotifBox(){
       <span class="notif-label">알림 권한</span>
       <span class="notif-perm ${permCls}">${permText}</span>
     </div>
+    ${on?`<div class="notif-row"><span class="notif-label">다음 알림</span>
+      <span class="notif-next">${esc(nextNotifyLabel())}</span></div>`:""}
     ${denied?`<div class="notif-warn">권한이 거부돼 있어요. 시스템 설정에서 직접 허용해야 알림이 뜹니다.
       <button class="btn sm" data-action="notif-settings">앱 알림 설정 열기</button></div>`:""}
     ${warn.join("")}

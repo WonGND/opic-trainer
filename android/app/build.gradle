@@ -1,5 +1,31 @@
 apply plugin: 'com.android.application'
 
+/*
+ * 릴리즈 서명 설정.
+ *
+ * 비밀번호와 keystore 경로는 소스에 넣지 않습니다. 다음 중 하나로 주입하세요.
+ *   1) android/keystore.properties  (.gitignore 처리됨 — 권장)
+ *        storeFile=/절대/경로/opic-release.keystore
+ *        storePassword=...
+ *        keyAlias=opic
+ *        keyPassword=...
+ *   2) 환경변수
+ *        OPIC_KEYSTORE_FILE / OPIC_KEYSTORE_PASSWORD / OPIC_KEY_ALIAS / OPIC_KEY_PASSWORD
+ *
+ * 설정이 없으면 릴리즈 빌드는 서명되지 않은 APK 를 만듭니다(설치 불가).
+ * keystore 생성 방법과 백업 주의사항은 README.md 를 보세요.
+ */
+def keystorePropsFile = rootProject.file("keystore.properties")
+def keystoreProps = new Properties()
+if (keystorePropsFile.exists()) {
+    keystorePropsFile.withInputStream { keystoreProps.load(it) }
+}
+def ksPath  = keystoreProps['storeFile']     ?: System.getenv('OPIC_KEYSTORE_FILE')
+def ksPass  = keystoreProps['storePassword'] ?: System.getenv('OPIC_KEYSTORE_PASSWORD')
+def ksAlias = keystoreProps['keyAlias']      ?: System.getenv('OPIC_KEY_ALIAS')
+def ksKey   = keystoreProps['keyPassword']   ?: System.getenv('OPIC_KEY_PASSWORD')
+def hasSigning = ksPath && ksPass && ksAlias && ksKey && file(ksPath).exists()
+
 android {
     namespace = "com.wongnd.opictrainer"
     compileSdk = rootProject.ext.compileSdkVersion
@@ -16,10 +42,26 @@ android {
             ignoreAssetsPattern = '!.svn:!.git:!.ds_store:!*.scc:.*:!CVS:!thumbs.db:!picasa.ini:!*~'
         }
     }
+    signingConfigs {
+        if (hasSigning) {
+            release {
+                storeFile file(ksPath)
+                storePassword ksPass
+                keyAlias ksAlias
+                keyPassword ksKey
+            }
+        }
+    }
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            if (hasSigning) {
+                signingConfig signingConfigs.release
+            } else {
+                // 서명 정보가 없으면 경고만 남기고 미서명 APK 를 만듭니다.
+                println("[opic] 서명 설정이 없어 릴리즈 APK 가 서명되지 않습니다. README.md 의 'keystore 만들기' 참고")
+            }
         }
     }
 }

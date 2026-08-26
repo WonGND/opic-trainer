@@ -14,10 +14,11 @@ android/app/release/
 android/app/debug/
 .gradle/
 
-# 서명 키 — 절대 커밋하지 않습니다
+# 서명 키 — 절대 커밋하지 않습니다 (분실 시 같은 앱으로 업데이트 불가)
 *.keystore
 *.jks
 keystore.properties
+android/keystore.properties
 
 # 기타
 .DS_Store
