@@ -84,7 +84,18 @@ node -v && java -version && adb --version
 
 ### 의존성 설치
 
+> ### ⚠️ 프로젝트 경로에 한글이 있으면 안 됩니다
+>
+> 안드로이드 빌드 도구는 경로에 ASCII 가 아닌 문자가 있으면 실패합니다
+> (`Your project path contains non-ASCII characters`).
+> **윈도우 사용자 이름이 한글이면 바탕화면·문서 폴더가 전부 여기 걸립니다.**
+> `C:\dev` 처럼 영문·숫자로만 된 경로에 두세요.
+> 빌드 스크립트가 시작 전에 검사해서 알려줍니다.
+
 ```bash
+# 윈도우 예시 — 영문 경로에 받습니다
+mkdir C:\dev
+cd C:\dev
 git clone https://github.com/WonGND/opic-trainer.git
 cd opic-trainer
 npm install

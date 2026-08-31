@@ -140,6 +140,30 @@ function pickJdk() {
 }
 
 // ── 실행 ──────────────────────────────────────────────────────────────
+
+/* 경로에 ASCII 가 아닌 문자(한글 등)가 있으면 안드로이드 빌드 도구가 실패합니다.
+   윈도우에서 사용자 이름이 한글이면 바탕화면·문서 경로가 전부 여기 걸립니다.
+   Gradle 이 40초쯤 돌다 실패하므로, 시작 전에 먼저 알려줍니다. */
+const nonAscii = (p) => /[^\x00-\x7F]/.test(p);
+if (nonAscii(ROOT)) {
+  console.error("\n✗ 프로젝트 경로에 한글(또는 ASCII 가 아닌 문자)이 있어 빌드할 수 없습니다.\n");
+  console.error(`  현재 위치: ${ROOT}`);
+  console.error("  안드로이드 빌드 도구가 이런 경로를 처리하지 못합니다.\n");
+  console.error("  해결: 영문·숫자로만 된 경로로 옮기세요. 예) C:\\dev\\opic-trainer\n");
+  console.error("    mkdir C:\\dev");
+  console.error("    cd C:\\dev");
+  console.error("    git clone -b feat/capacitor-android https://github.com/WonGND/opic-trainer.git");
+  console.error("    cd opic-trainer");
+  console.error("    npm install");
+  console.error("    npm run build:debug\n");
+  process.exit(1);
+}
+if (nonAscii(process.env.GRADLE_USER_HOME || homedir())) {
+  console.log("[opic] 참고: 사용자 폴더 경로에 한글이 있습니다.");
+  console.log("       빌드가 경로 문제로 실패하면 Gradle 캐시 위치도 옮겨 보세요:");
+  console.log('       [Environment]::SetEnvironmentVariable("GRADLE_USER_HOME","C:\\gradle-home","User")');
+}
+
 const wrapper = join(ANDROID, isWin ? "gradlew.bat" : "gradlew");
 if (!existsSync(wrapper)) {
   console.error(`✗ Gradle 래퍼를 찾을 수 없습니다: ${wrapper}`);
