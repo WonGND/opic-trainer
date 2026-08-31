@@ -37,9 +37,14 @@ android/                    안드로이드 프로젝트
 
 ### 필요한 것
 - **Node.js 20+**
-- **JDK 21** — Android Studio 내장 JBR 을 써도 됩니다
 - **Android Studio** + SDK — https://developer.android.com/studio
   - SDK Manager 에서 **Platform 36**, **Build-Tools 36**, **Platform-Tools** 설치
+- **JDK 21** — Android Studio 가 함께 설치하므로 따로 받지 않아도 됩니다.
+
+> ⚠️ **Android Studio 는 JDK 를 설치하되 `JAVA_HOME` 이나 `PATH` 에 등록하지 않습니다.**
+> 그래서 터미널에서 Gradle 을 돌리면 `JAVA_HOME is not set` 으로 실패할 수 있습니다.
+> `npm run build:debug` 는 Android Studio 가 설치한 JDK 를 자동으로 찾아 쓰므로
+> 대개 그냥 됩니다. 못 찾으면 해결 방법을 화면에 안내합니다.
 
 ### 환경변수
 
@@ -51,7 +56,15 @@ export ANDROID_HOME="$HOME/Library/Android/sdk"
 export PATH="$PATH:$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin"
 ```
 
-Windows 는 시스템 환경변수에 `ANDROID_HOME = %LOCALAPPDATA%\Android\Sdk` 를 추가하고, `%ANDROID_HOME%\platform-tools` 를 `Path` 에 넣습니다.
+**Windows (PowerShell)** — 영구 설정:
+
+```powershell
+[Environment]::SetEnvironmentVariable("ANDROID_HOME","$env:LOCALAPPDATA\Android\Sdk","User")
+[Environment]::SetEnvironmentVariable("JAVA_HOME","C:\Program Files\Android\Android Studio\jbr","User")
+```
+
+설정 후 **PowerShell 창을 새로 열어야** 적용됩니다.
+`JAVA_HOME` 은 빌드 스크립트가 자동으로 찾으므로 보통 지정하지 않아도 됩니다.
 
 확인:
 
