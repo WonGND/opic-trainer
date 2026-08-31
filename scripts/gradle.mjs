@@ -54,6 +54,17 @@ function jdkMajor(home) {
   return null;
 }
 
+/** 하위 폴더 전체를 나열합니다 (JDK 여부는 보지 않음) */
+function scanDirAll(dir) {
+  try {
+    return readdirSync(dir, { withFileTypes: true })
+      .filter((d) => d.isDirectory())
+      .map((d) => join(dir, d.name));
+  } catch {
+    return [];
+  }
+}
+
 /** 하위 폴더 중 JDK 로 보이는 것들을 모읍니다 (예: ~/.jdks/*, C:\Program Files\Java\*) */
 function scanDir(dir) {
   try {
@@ -82,6 +93,12 @@ function candidates() {
 
   // IDE 가 내려받은 JDK (Android Studio: Gradle JDK → Download JDK)
   out.push(...scanDir(join(home, ".jdks")));
+  // Gradle 툴체인 자동 프로비저닝이 받아둔 JDK (Gradle JVM criteria 로 버전을 지정한 경우)
+  const gradleHome = process.env.GRADLE_USER_HOME || join(home, ".gradle");
+  out.push(...scanDir(join(gradleHome, "jdks")));
+  // 위 폴더는 한 단계 더 들어가 있는 경우가 있습니다 (예: .gradle/jdks/<배포판>/<jdk홈>)
+  for (const d of scanDirAll(join(gradleHome, "jdks"))) out.push(...scanDir(d));
+  for (const d of scanDirAll(join(home, ".jdks"))) out.push(...scanDir(d));
 
   if (isWin) {
     const pf = process.env["ProgramFiles"] || "C:\\Program Files";
@@ -158,8 +175,9 @@ if (!pick) {
   } else {
     console.error('    설치 후:  export JAVA_HOME="/path/to/jdk-21"');
   }
-  console.error("\n  (Android Studio 에서 Settings → Build, Execution, Deployment → Build Tools →");
-  console.error("   Gradle → Gradle JDK → Download JDK 로 21 을 받아도 자동으로 인식합니다.)\n");
+  console.error("\n  (Android Studio 에서 프로젝트를 연 뒤 Settings → Build, Execution, Deployment →");
+  console.error("   Build Tools → Gradle → Gradle JDK → Download JDK 로 21 을 받아도 인식합니다.");
+  console.error("   프로젝트를 열지 않았다면 Gradle JVM criteria 의 Version 을 21 로 바꾸세요.)\n");
   process.exit(1);
 }
 
