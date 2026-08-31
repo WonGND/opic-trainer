@@ -60,7 +60,8 @@ android {
                 signingConfig signingConfigs.release
             } else {
                 // 서명 정보가 없으면 경고만 남기고 미서명 APK 를 만듭니다.
-                println("[opic] 서명 설정이 없어 릴리즈 APK 가 서명되지 않습니다. README.md 의 'keystore 만들기' 참고")
+                // (윈도우 콘솔 기본 코드페이지에서 한글이 깨지므로 로그는 ASCII 로 둡니다)
+                println("[opic] Release APK will NOT be signed - no keystore configured. See README.md")
             }
         }
     }

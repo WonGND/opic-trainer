@@ -13,7 +13,7 @@
  * Node 내장 모듈만 사용합니다(의존성 없음).
  */
 import { spawnSync } from "node:child_process";
-import { existsSync, readFileSync, readdirSync } from "node:fs";
+import { existsSync, readFileSync, readdirSync, writeFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 import { homedir } from "node:os";
@@ -163,6 +163,73 @@ if (nonAscii(process.env.GRADLE_USER_HOME || homedir())) {
   console.log("       빌드가 경로 문제로 실패하면 Gradle 캐시 위치도 옮겨 보세요:");
   console.log('       [Environment]::SetEnvironmentVariable("GRADLE_USER_HOME","C:\\gradle-home","User")');
 }
+
+/* Android SDK 위치를 android/local.properties 에 적어줍니다.
+   Android Studio 로 프로젝트를 한 번 열면 자동 생성되지만, 터미널만 쓰는 경우에는
+   "SDK location not found" 로 실패합니다. 흔한 설치 위치를 찾아 대신 써 둡니다. */
+function sdkCandidates() {
+  const home = homedir();
+  const out = [process.env.ANDROID_HOME, process.env.ANDROID_SDK_ROOT];
+  if (isWin) {
+    const local = process.env["LOCALAPPDATA"] || join(home, "AppData", "Local");
+    out.push(join(local, "Android", "Sdk"), join(local, "Android", "sdk"),
+             "C:\\Android\\Sdk", "C:\\Android\\sdk");
+  } else if (isMac) {
+    out.push(join(home, "Library", "Android", "sdk"));
+  } else {
+    out.push(join(home, "Android", "Sdk"), "/usr/lib/android-sdk", "/opt/android-sdk");
+  }
+  return out.filter(Boolean);
+}
+const looksLikeSdk = (p) =>
+  existsSync(join(p, "platform-tools")) || existsSync(join(p, "platforms")) || existsSync(join(p, "licenses"));
+
+/* .properties 파일은 ASCII 로 두는 것이 안전합니다.
+   경로에 한글이 있으면 \uXXXX 로 이스케이프해 인코딩 문제를 피합니다. */
+function propEscape(v) {
+  return [...v].map((ch) => {
+    if (ch === "\\") return "\\\\";
+    if (ch === ":") return "\\:";
+    const c = ch.codePointAt(0);
+    return c > 127 ? "\\u" + c.toString(16).padStart(4, "0") : ch;
+  }).join("");
+}
+
+function ensureLocalProperties() {
+  const lp = join(ANDROID, "local.properties");
+  if (existsSync(lp) && /^\s*sdk\.dir\s*=/m.test(readFileSync(lp, "utf8"))) return true;
+  const sdk = sdkCandidates().find((p) => { try { return existsSync(p) && looksLikeSdk(p); } catch { return false; } });
+  if (!sdk) {
+    console.error("\n✗ Android SDK 를 찾을 수 없습니다.\n");
+    console.error("  Android Studio 를 설치하고 첫 실행 마법사(Standard)를 끝까지 진행하면 함께 설치됩니다.");
+    console.error("  https://developer.android.com/studio\n");
+    console.error("  이미 설치했다면 위치를 직접 지정하세요:");
+    if (isWin) {
+      console.error('    [Environment]::SetEnvironmentVariable("ANDROID_HOME","$env:LOCALAPPDATA\\Android\\Sdk","User")');
+      console.error("    지정 후 PowerShell 을 새로 열고 다시 실행하세요.");
+    } else {
+      console.error('    export ANDROID_HOME="$HOME/Library/Android/sdk"   # macOS');
+    }
+    console.error("");
+    return false;
+  }
+  try {
+    writeFileSync(lp,
+      "# 이 파일은 빌드 스크립트가 자동으로 만들었습니다. 각자 PC 마다 경로가 달라 커밋하지 않습니다.\n" +
+      "sdk.dir=" + propEscape(sdk) + "\n", "utf8");
+    console.log(`[opic] Android SDK 위치를 적었습니다: ${sdk}`);
+    if (nonAscii(sdk)) {
+      console.log("[opic] 참고: SDK 경로에 한글이 있습니다. 빌드가 리소스 단계에서 실패하면");
+      console.log("       Android Studio 의 SDK Manager 에서 위치를 C:\\Android\\Sdk 로 바꿔 다시 받으세요.");
+    }
+    return true;
+  } catch (e) {
+    console.error("✗ local.properties 를 쓰지 못했습니다:", e.message);
+    return false;
+  }
+}
+
+if (!ensureLocalProperties()) process.exit(1);
 
 const wrapper = join(ANDROID, isWin ? "gradlew.bat" : "gradlew");
 if (!existsSync(wrapper)) {
