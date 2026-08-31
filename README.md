@@ -41,10 +41,20 @@ android/                    안드로이드 프로젝트
   - SDK Manager 에서 **Platform 36**, **Build-Tools 36**, **Platform-Tools** 설치
 - **JDK 21** — Android Studio 가 함께 설치하므로 따로 받지 않아도 됩니다.
 
-> ⚠️ **Android Studio 는 JDK 를 설치하되 `JAVA_HOME` 이나 `PATH` 에 등록하지 않습니다.**
-> 그래서 터미널에서 Gradle 을 돌리면 `JAVA_HOME is not set` 으로 실패할 수 있습니다.
-> `npm run build:debug` 는 Android Studio 가 설치한 JDK 를 자동으로 찾아 쓰므로
-> 대개 그냥 됩니다. 못 찾으면 해결 방법을 화면에 안내합니다.
+> ### ⚠️ JDK 버전 주의
+>
+> **필요한 버전은 Java 17~24 이며 21 을 권장합니다.** Gradle 8.x 는 아직 **Java 25 를
+> 지원하지 않습니다**(`Unsupported class file major version 69` 오류).
+> 최신 Android Studio 의 내장 JDK 는 Java 25 라서 그대로 쓰면 빌드가 실패합니다.
+>
+> `npm run build:debug` 는 설치된 JDK 들을 훑어 **호환되는 버전(21 우선)을 자동으로
+> 골라** 씁니다. Java 25 만 있으면 건너뛰고 해결 방법을 안내합니다.
+>
+> JDK 21 을 얻는 가장 쉬운 방법은 Android Studio 안에서 받는 것입니다:
+> **Settings → Build, Execution, Deployment → Build Tools → Gradle →
+> Gradle JDK → Download JDK → 버전 21 선택.**
+> `~/.jdks/` 에 설치되며 빌드 스크립트가 자동으로 인식합니다.
+> 따로 설치하려면 https://adoptium.net/temurin/releases/?version=21 에서 받으세요.
 
 ### 환경변수
 
